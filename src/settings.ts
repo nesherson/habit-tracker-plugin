@@ -1,18 +1,18 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import MyPlugin from './main';
+import HabitTracker from './main';
 
-export interface MyPluginSettings {
+export interface Settings {
 	mySetting: string;
 }
 
-export const DEFAULT_SETTINGS: MyPluginSettings = {
+export const DEFAULT_SETTINGS: Settings = {
 	mySetting: 'default',
 };
 
-export class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+export class HabitTrackerSettingTab extends PluginSettingTab {
+	plugin: HabitTracker;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: HabitTracker) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
