@@ -1,0 +1,579 @@
+.habit-tracker-view.view-content {
+	padding: 0;
+	display: flex;
+	overflow: hidden;
+}
+
+.ht-root {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	font-size: 13.5px;
+	color: var(--text-normal);
+}
+.ht-root *,
+.ht-root *::before,
+.ht-root *::after {
+	box-sizing: border-box;
+}
+.ht-root button {
+	font-family: inherit;
+	cursor: pointer;
+	background: transparent;
+	border: 0;
+}
+
+/* ---- toolbar ---------------------------------------------------------- */
+.ht-toolbar {
+	flex: 0 0 auto;
+	height: 52px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 18px;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+.ht-weeknav {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.ht-navbtn {
+	/*width: 30px;
+	height: 30px;*/
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 7px;
+	color: var(--text-muted);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ht-navbtn:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+.ht-weeklabel {
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	margin: 0 4px;
+	color: var(--text-normal);
+}
+.ht-todaybtn {
+	margin-left: 6px;
+	height: 30px;
+	padding: 0 12px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 7px;
+	color: var(--text-muted);
+	font-size: 12.5px;
+	font-weight: 500;
+}
+.ht-todaybtn:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+.ht-toolbar-sum {
+	display: flex;
+	align-items: baseline;
+	gap: 7px;
+}
+.ht-toolbar-pct {
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--interactive-accent);
+	font-variant-numeric: tabular-nums;
+}
+.ht-toolbar-cap {
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-faint);
+}
+
+/* ---- body split ------------------------------------------------------- */
+.ht-body {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+}
+.ht-main {
+	flex: 1;
+	min-width: 0;
+	padding: 16px 18px;
+	overflow: auto;
+}
+.ht-side {
+	flex: 0 0 300px;
+	border-left: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+	padding: 14px 14px 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	overflow: auto;
+}
+
+/* ---- tracker grid ----------------------------------------------------- */
+.htrack {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 12px;
+	overflow: hidden;
+	background: var(--background-primary);
+}
+.ht-head,
+.ht-row {
+	display: grid;
+	grid-template-columns:
+		minmax(190px, 2.4fr) repeat(7, minmax(40px, 1fr))
+		78px;
+	align-items: center;
+}
+.ht-head {
+	height: 48px;
+	flex: 0 0 48px;
+	background: var(--background-secondary);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+.ht-corner {
+	padding-left: 16px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+}
+.ht-dayh {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1px;
+}
+.ht-dayh.is-today .ht-wd,
+.ht-dayh.is-today .ht-dn {
+	color: var(--interactive-accent);
+}
+.ht-wd {
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--text-faint);
+}
+.ht-dn {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text-normal);
+	line-height: 1;
+}
+.ht-sumh {
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	text-align: center;
+}
+
+.ht-body-rows {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+.ht-row {
+	min-height: 52px;
+	border-bottom: 1px solid
+		var(
+			--background-modifier-border-hover,
+			var(--background-modifier-border)
+		);
+}
+.ht-row:last-child {
+	border-bottom: 0;
+}
+.ht-row:hover {
+	background: var(--background-modifier-hover);
+}
+
+.ht-name {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+	padding: 0 30px 0 16px;
+	position: relative;
+}
+.ht-habit-name {
+	font-weight: 550;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.ht-goaltag {
+	font-size: 10px;
+	color: var(--text-faint);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 10px;
+	padding: 0 6px;
+	flex: 0 0 auto;
+}
+.ht-ring-bg {
+	stroke: var(--background-modifier-border);
+}
+
+.ht-cell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	height: 100%;
+	cursor: pointer;
+}
+.ht-cell.is-today {
+	background: color-mix(in srgb, var(--interactive-accent) 6%, transparent);
+}
+.ht-mark {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ht-mark.is-on svg {
+	width: 17px;
+	height: 17px;
+}
+.ht-mark.is-off {
+	color: var(--text-faint);
+	opacity: 0.4;
+}
+.ht-mark.is-off svg {
+	width: 13px;
+	height: 13px;
+}
+.ht-cell-num {
+	font-size: 12.5px;
+	align-items: baseline;
+}
+.ht-numval {
+	font-weight: 500;
+	color: var(--text-muted);
+	font-variant-numeric: tabular-nums;
+}
+.ht-numval.is-met {
+	font-weight: 650;
+}
+.ht-numunit {
+	font-size: 9.5px;
+	color: var(--text-faint);
+}
+
+.ht-sumc {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+}
+.ht-rate {
+	font-size: 12.5px;
+	font-weight: 650;
+	font-variant-numeric: tabular-nums;
+}
+.ht-streak {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--text-muted);
+	font-variant-numeric: tabular-nums;
+}
+.ht-streak svg {
+	width: 12px;
+	height: 12px;
+	color: var(--interactive-accent);
+}
+
+.ht-foot {
+	flex: 0 0 auto;
+	border-top: 1px solid var(--background-modifier-border);
+}
+.ht-addhabit {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 10px 16px;
+	width: 100%;
+	font-size: 12.5px;
+	color: var(--text-faint);
+}
+.ht-addhabit:hover {
+	color: var(--text-muted);
+}
+.ht-addhabit svg {
+	width: 13px;
+	height: 13px;
+}
+
+/* row delete / edit buttons (reveal on hover) */
+.ht-rowdel {
+	position: absolute;
+	right: 6px;
+	top: 50%;
+	transform: translateY(-50%);
+	flex: 0 0 auto;
+	width: 22px;
+	height: 22px;
+	border-radius: 5px;
+	color: var(--text-faint);
+	opacity: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ht-focus,
+.ht-task,
+.ht-noterow {
+	position: relative;
+}
+.ht-focus .ht-rowdel,
+.ht-task .ht-rowdel,
+.ht-noterow .ht-rowdel {
+	position: static;
+	transform: none;
+	margin-left: 4px;
+}
+.ht-rowdel svg {
+	width: 13px;
+	height: 13px;
+}
+.ht-name:hover .ht-rowdel,
+.ht-focus:hover .ht-rowdel,
+.ht-task:hover .ht-rowdel,
+.ht-noterow:hover .ht-rowdel {
+	opacity: 1;
+}
+.ht-rowdel:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+.ht-rowdel-sm {
+	width: 20px;
+	height: 20px;
+}
+
+/* ---- inline edit input ------------------------------------------------ */
+.ht-edit {
+	font: inherit;
+	color: var(--text-normal);
+	background: var(--background-primary);
+	border: 1px solid var(--interactive-accent);
+	border-radius: 5px;
+	padding: 1px 5px;
+	width: 100%;
+	min-width: 60px;
+	outline: none;
+}
+.ht-edit-num {
+	width: 54px;
+	text-align: center;
+	padding: 1px 2px;
+}
+
+/* ---- right rail sections --------------------------------------------- */
+.ht-sec {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.ht-sh {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+.ht-sh-icon {
+	display: flex;
+	color: var(--interactive-accent);
+}
+.ht-sh-icon svg {
+	width: 14px;
+	height: 14px;
+}
+.ht-sh-title {
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: var(--text-normal);
+}
+.ht-sh-count {
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--text-muted);
+	background: var(--background-modifier-hover);
+	border-radius: 20px;
+	padding: 1px 7px;
+}
+.ht-sh-add {
+	margin-left: auto;
+	color: var(--text-faint);
+	width: 22px;
+	height: 22px;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ht-sh-add svg {
+	width: 13px;
+	height: 13px;
+}
+.ht-sh-add:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+/* focuses */
+.ht-focuslist {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+.ht-focus {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	padding: 7px 9px;
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+}
+.ht-focus-dot {
+	flex: 0 0 auto;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--interactive-accent);
+}
+.ht-focus-l {
+	flex: 1;
+	min-width: 0;
+	font-size: 12.8px;
+	cursor: text;
+}
+.ht-focus-l .ht-edit-label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+}
+.ht-focus-p {
+	font-size: 11px;
+	color: var(--text-faint);
+	font-variant-numeric: tabular-nums;
+	cursor: pointer;
+	padding: 1px 4px;
+	border-radius: 4px;
+}
+.ht-focus-p:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-muted);
+}
+
+/* task lists (to-do, read/watch) */
+.ht-tasklist {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+}
+.ht-task {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	padding: 4px 4px;
+	border-radius: 6px;
+}
+.ht-cb {
+	flex: 0 0 auto;
+	width: 16px;
+	height: 16px;
+	border: 1.5px solid var(--background-modifier-border);
+	border-radius: 5px;
+	color: var(--text-on-accent, #fff);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+.ht-cb svg {
+	width: 11px;
+	height: 11px;
+}
+.ht-cb.is-done {
+	background: var(--interactive-accent);
+	border-color: var(--interactive-accent);
+}
+.ht-task-l {
+	flex: 1;
+	min-width: 0;
+	font-size: 12.8px;
+	cursor: text;
+}
+.ht-task-l.is-done {
+	color: var(--text-faint);
+	text-decoration: line-through;
+}
+.ht-task-l .ht-edit-label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+}
+
+/* notes */
+.ht-noteslist {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+}
+.ht-noterow {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 6px;
+	border-radius: 6px;
+}
+.ht-noterow:hover {
+	background: var(--background-modifier-hover);
+}
+.ht-note-icon {
+	display: flex;
+	color: var(--text-faint);
+}
+.ht-note-icon svg {
+	width: 14px;
+	height: 14px;
+}
+.ht-note-l {
+	flex: 1;
+	min-width: 0;
+	font-size: 12.8px;
+	color: var(--text-muted);
+	cursor: pointer;
+}
+.ht-noterow:hover .ht-note-l {
+	color: var(--interactive-accent);
+}
+.ht-note-l .ht-edit-label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+}
+
+.display-none {
+	display: none;
+}
