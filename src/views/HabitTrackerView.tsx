@@ -35,7 +35,7 @@ export class HabitTrackerView extends ItemView {
 		this.root = createRoot(this.containerEl);
 		this.root.render(
 			<StrictMode>
-				<ReactView state={this.data} />
+				<ReactView initialState={this.data} />
 			</StrictMode>,
 		);
 

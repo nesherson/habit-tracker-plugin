@@ -1,32 +1,13 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { addDays, dateKey } from '../helpers';
+import { addDays, dateKey, weekRate } from '../helpers';
 import { WEEK_DAYS } from '../data';
 import { Habit } from '../types';
 
 interface ToolbarProps {
 	startOfWeekInitial: Date;
 	habits: Habit[];
-}
-
-/* Completion rate measured only over days that have actually elapsed this week,
-   so pre-ticking a future day never inflates the percentage */
-function weekRate(habit: Habit, days: Date[], todayKey: string) {
-	const elapsed = days.filter((d) => dateKey(d) <= todayKey);
-	const denom = elapsed.length || 7;
-	const score = elapsed.reduce(
-		(n, d) => n + (isDone(habit, habit.log[dateKey(d)]) ? 1 : 0),
-		0,
-	);
-
-	return { score, denom, pct: Math.round((score / denom) * 100) };
-}
-
-function isDone(habit: Habit, v: number | null | undefined) {
-	if (v == null) return false;
-
-	return habit.type === 'num' ? Number(v) >= (habit.goal || 1) : v === 1;
 }
 
 export function Toolbar({ startOfWeekInitial, habits }: ToolbarProps) {

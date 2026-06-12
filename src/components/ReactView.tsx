@@ -1,17 +1,28 @@
+import { useReducer } from 'react';
 import { HabitTrackerState } from '../types';
 import { Toolbar } from './Toolbar';
+import { Tracker } from './Tracker';
+import { habitTrackerReducer } from '../reducer';
 
 interface ReactViewProps {
-	state: HabitTrackerState;
+	initialState: HabitTrackerState;
 }
 
-export function ReactView({ state }: ReactViewProps) {
+export function ReactView({ initialState }: ReactViewProps) {
+	const [state, dispatch] = useReducer(habitTrackerReducer, initialState);
+
 	return (
-		<h4>
+		<div className="ht-root">
 			<Toolbar startOfWeekInitial={new Date()} habits={state.habits} />
-			{state.habits.map((h) => (
-				<div>{h.name}</div>
-			))}
-		</h4>
+			<div className="ht-body">
+				<div className="ht-main">
+					<Tracker
+						startOfWeek={new Date()}
+						habits={state.habits}
+						dispatch={dispatch}
+					/>
+				</div>
+			</div>
+		</div>
 	);
 }
