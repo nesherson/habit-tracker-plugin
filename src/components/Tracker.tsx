@@ -1,9 +1,9 @@
-import { WEEK_DAYS } from '../data';
-import { addDays, dateKey, isDone, weekRate } from '../helpers';
+import { seedLog, WEEK_DAYS } from '../data';
+import { addDays, dateKey, isDone, uid, weekRate } from '../helpers';
 import { HabitTrackerAction } from '../reducer';
 import { Habit } from '../types';
 import { Ring } from './Ring';
-import { Check, X, Flame } from 'lucide-react';
+import { Check, X, Flame, Plus } from 'lucide-react';
 
 /* per-habit accent palette (works on light & dark themes) */
 const PALETTE: Record<string, string> = {
@@ -45,6 +45,21 @@ export function Tracker({ startOfWeek, habits, dispatch }: TrackerProps) {
 	const days = getWeekDays();
 	const todayKey = dateKey(new Date());
 
+	function handleAddHabitClick(): void {
+		dispatch({
+			type: 'ADD_HABIT',
+			payload: {
+				id: uid(),
+				name: 'Test',
+				color: '',
+				type: '',
+				goal: 0,
+				unit: '',
+				log: seedLog([1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0]),
+			},
+		});
+	}
+
 	return (
 		<div className="htrack">
 			<div className="ht-head">
@@ -74,6 +89,12 @@ export function Tracker({ startOfWeek, habits, dispatch }: TrackerProps) {
 						dispatch={dispatch}
 					/>
 				))}
+			</div>
+			<div className="ht-foot">
+				<button className="ht-addhabit" onClick={handleAddHabitClick}>
+					<Plus size={12} />
+					New Habit
+				</button>
 			</div>
 		</div>
 	);
