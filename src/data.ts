@@ -113,7 +113,7 @@ export function seedData(): HabitTrackerState {
 			{ id: uid(), label: 'Fix sync bug #214', done: false },
 			{ id: uid(), label: 'Schedule eye exam', done: false },
 		],
-		reading: [
+		readings: [
 			{ id: uid(), label: 'Outsourcing thinking', done: false },
 			{ id: uid(), label: 'Designing data-heavy UIs', done: false },
 		],

@@ -2,7 +2,7 @@ export interface HabitTrackerState {
 	habits: Habit[];
 	focuses: KeyFocus[];
 	todos: ToDo[];
-	reading: Reading[];
+	readings: Reading[];
 	notes: Note[];
 }
 

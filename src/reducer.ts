@@ -189,20 +189,20 @@ export function habitTrackerReducer(
 		// ── Reading ──────────────────────────────────────────────────────────────
 
 		case 'ADD_READING':
-			return { ...state, reading: [...state.reading, action.payload] };
+			return { ...state, readings: [...state.readings, action.payload] };
 
 		case 'UPDATE_READING': {
 			const { id, ...changes } = action.payload;
 			return {
 				...state,
-				reading: updateById(state.reading, id, changes),
+				readings: updateById(state.readings, id, changes),
 			};
 		}
 
 		case 'TOGGLE_READING':
 			return {
 				...state,
-				reading: state.reading.map((item) =>
+				readings: state.readings.map((item) =>
 					item.id === action.payload.id
 						? { ...item, done: !item.done }
 						: item,
@@ -212,7 +212,7 @@ export function habitTrackerReducer(
 		case 'REMOVE_READING':
 			return {
 				...state,
-				reading: removeById(state.reading, action.payload.id),
+				readings: removeById(state.readings, action.payload.id),
 			};
 
 		// ── Notes ────────────────────────────────────────────────────────────────
