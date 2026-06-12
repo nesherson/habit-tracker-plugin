@@ -23,7 +23,13 @@ export function ReactView({ initialState }: ReactViewProps) {
 						dispatch={dispatch}
 					/>
 				</div>
-				<Side focuses={state.focuses} dispatch={dispatch} />
+				<Side
+					focuses={state.focuses}
+					todos={state.todos}
+					readings={state.readings}
+					notes={state.notes}
+					dispatch={dispatch}
+				/>
 			</div>
 		</div>
 	);
