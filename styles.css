@@ -325,14 +325,13 @@
 	top: 50%;
 	transform: translateY(-50%);
 	flex: 0 0 auto;
-	width: 22px;
-	height: 22px;
 	border-radius: 5px;
 	color: var(--text-faint);
 	opacity: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 3px 6px;
 }
 .ht-focus,
 .ht-task,
@@ -346,10 +345,6 @@
 	transform: none;
 	margin-left: 4px;
 }
-.ht-rowdel svg {
-	width: 13px;
-	height: 13px;
-}
 .ht-name:hover .ht-rowdel,
 .ht-focus:hover .ht-rowdel,
 .ht-task:hover .ht-rowdel,
@@ -359,10 +354,6 @@
 .ht-rowdel:hover {
 	background: var(--background-modifier-hover);
 	color: var(--text-normal);
-}
-.ht-rowdel-sm {
-	width: 20px;
-	height: 20px;
 }
 
 /* ---- inline edit input ------------------------------------------------ */
@@ -420,22 +411,15 @@
 .ht-sh-add {
 	margin-left: auto;
 	color: var(--text-faint);
-	width: 22px;
-	height: 22px;
 	border-radius: 5px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
-.ht-sh-add svg {
-	width: 13px;
-	height: 13px;
-}
 .ht-sh-add:hover {
 	background: var(--background-modifier-hover);
 	color: var(--text-normal);
 }
-
 /* focuses */
 .ht-focuslist {
 	display: flex;

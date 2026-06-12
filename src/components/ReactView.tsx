@@ -3,6 +3,7 @@ import { HabitTrackerState } from '../types';
 import { Toolbar } from './Toolbar';
 import { Tracker } from './Tracker';
 import { habitTrackerReducer } from '../reducer';
+import { Side } from './Side';
 
 interface ReactViewProps {
 	initialState: HabitTrackerState;
@@ -22,6 +23,7 @@ export function ReactView({ initialState }: ReactViewProps) {
 						dispatch={dispatch}
 					/>
 				</div>
+				<Side focuses={state.focuses} dispatch={dispatch} />
 			</div>
 		</div>
 	);
