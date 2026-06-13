@@ -25,7 +25,6 @@ export function Ring({ pct, color, size }: RingProps) {
 				strokeWidth={3.2}
 			/>
 			<circle
-				className="ht-ring-bg"
 				cx={12}
 				cy={12}
 				r={r}
