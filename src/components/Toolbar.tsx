@@ -1,28 +1,31 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { addDays, dateKey, weekRate } from '../helpers';
+import { addDays, dateKey, weekRate, getStartOfWeek } from '../helpers';
 import { WEEK_DAYS } from '../data';
 import { Habit } from '../types';
 
 interface ToolbarProps {
-	startOfWeekInitial: Date;
+	startOfWeek: Date;
 	habits: Habit[];
+	startOfWeekOnChange: (newDate: Date) => void;
 }
 
-export function Toolbar({ startOfWeekInitial, habits }: ToolbarProps) {
-	const [startOfWeek, setStartOfWeek] = useState(startOfWeekInitial);
-
+export function Toolbar({
+	startOfWeek,
+	habits,
+	startOfWeekOnChange,
+}: ToolbarProps) {
 	const handleLeftNavBtnClick = () => {
-		setStartOfWeek((prev) => addDays(prev, -7));
+		startOfWeekOnChange(addDays(startOfWeek, -7));
 	};
 
 	const handleRightNavBtnClick = () => {
-		setStartOfWeek((prev) => addDays(prev, 7));
+		startOfWeekOnChange(addDays(startOfWeek, 7));
 	};
 
-	const handleTodayBtnClick = () => {
-		setStartOfWeek(new Date());
+	const handleThisWeekClick = () => {
+		startOfWeekOnChange(getStartOfWeek(new Date()));
 	};
 
 	const getWeekDays = () => {
@@ -42,7 +45,7 @@ export function Toolbar({ startOfWeekInitial, habits }: ToolbarProps) {
 			: `${start.toLocaleString('en', moOpt)} ${start.getDate()} – ${end.toLocaleString('en', moOpt)} ${end.getDate()}, ${end.getFullYear()}`;
 
 		return label;
-	}, []);
+	}, [startOfWeek]);
 
 	const pct = useMemo(() => {
 		const allDays = getWeekDays();
@@ -69,7 +72,7 @@ export function Toolbar({ startOfWeekInitial, habits }: ToolbarProps) {
 				<button className="ht-navbtn" onClick={handleRightNavBtnClick}>
 					<ChevronRight size={12} />
 				</button>
-				<button className="ht-todaybtn" onClick={handleTodayBtnClick}>
+				<button className="ht-todaybtn" onClick={handleThisWeekClick}>
 					This week
 				</button>
 			</div>

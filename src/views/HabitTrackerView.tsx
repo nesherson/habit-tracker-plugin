@@ -3,7 +3,7 @@ import { StrictMode } from 'react';
 import { Root, createRoot } from 'react-dom/client';
 import { ReactView } from '../components/ReactView';
 import HabitTracker from '../main';
-import { startOfWeek } from '../helpers';
+import { getStartOfWeek } from '../helpers';
 import { HabitTrackerState } from '../types';
 
 export const HABIT_TRACKER_VIEW_TYPE = 'habit-tracker-view';
@@ -16,7 +16,7 @@ export class HabitTrackerView extends ItemView {
 	constructor(leaf: WorkspaceLeaf, plugin: HabitTracker) {
 		super(leaf);
 		this.plugin = plugin;
-		this.ref = startOfWeek(new Date());
+		this.ref = getStartOfWeek(new Date());
 	}
 
 	getViewType(): string {

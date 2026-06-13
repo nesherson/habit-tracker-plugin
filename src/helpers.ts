@@ -4,7 +4,7 @@ export function uid() {
 	return Math.random().toString(36).slice(2, 9);
 }
 
-export function startOfWeek(d: Date) {
+export function getStartOfWeek(d: Date) {
 	// Monday
 	const x = new Date(d);
 	const dow = (x.getDay() + 6) % 7; // 0 = Mon
@@ -29,17 +29,17 @@ export function dateKey(d: Date) {
 	return `${y}-${m}-${day}`;
 }
 
-/* Completion rate measured only over days that have actually elapsed this week,
-   so pre-ticking a future day never inflates the percentage */
-export function weekRate(habit: Habit, days: Date[], todayKey: string) {
-	const elapsed = days.filter((d) => dateKey(d) <= todayKey);
-	const denom = elapsed.length || 7;
-	const score = elapsed.reduce(
+export function weekRate(habit: Habit, days: Date[]) {
+	const score = days.reduce(
 		(n, d) => n + (isDone(habit, habit.log[dateKey(d)]) ? 1 : 0),
 		0,
 	);
 
-	return { score, denom, pct: Math.round((score / denom) * 100) };
+	return {
+		score,
+		denom: habit.goal,
+		pct: Math.round((score / habit.goal) * 100),
+	};
 }
 
 export function isDone(habit: Habit, v: number | null | undefined) {
