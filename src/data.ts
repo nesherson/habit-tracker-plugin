@@ -62,7 +62,7 @@ export function seedData(): HabitTrackerState {
 				name: 'Meditate',
 				color: 'rose',
 				type: 'check',
-				goal: 1,
+				goal: 5,
 				log: C([1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1]),
 			},
 			{

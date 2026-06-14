@@ -1,5 +1,5 @@
 import { seedLog, WEEK_DAYS } from '../data';
-import { addDays, dateKey, isDone, uid, weekRate } from '../helpers';
+import { addDays, dateKey, isDone, streak, uid, weekRate } from '../helpers';
 import { HabitTrackerAction } from '../reducer';
 import { Habit } from '../types';
 import { Ring } from './Ring';
@@ -16,20 +16,6 @@ const PALETTE: Record<string, string> = {
 };
 
 const PALETTE_KEYS = Object.keys(PALETTE);
-
-function streak(habit: Habit) {
-	let n = 0;
-	let d = new Date();
-
-	d.setHours(0, 0, 0, 0);
-
-	if (!isDone(habit, habit.log[dateKey(d)])) d = addDays(d, -1); // today may be unfinished
-	while (isDone(habit, habit.log[dateKey(d)])) {
-		n++;
-		d = addDays(d, -1);
-	}
-	return n;
-}
 
 interface TrackerProps {
 	startOfWeek: Date;
@@ -109,7 +95,7 @@ interface HabitRowProps {
 
 function HabitRow({ habit, days, todayKey, dispatch }: HabitRowProps) {
 	const color = PALETTE[habit.color] || PALETTE.violet!;
-	const rate = weekRate(habit, days, todayKey);
+	const rate = weekRate(habit, days);
 	const st = streak(habit);
 
 	return (
@@ -141,8 +127,11 @@ function HabitRow({ habit, days, todayKey, dispatch }: HabitRowProps) {
 			<div className="ht-sumc">
 				<span className="ht-rate" style={{ color: color }}>
 					{rate.pct}%
-					{st > 1 && (
-						<span className="ht-streak">
+					{st >= 1 && (
+						<span
+							className="ht-streak"
+							title={`Streak of ${st} ${st === 1 ? 'week' : 'weeks'}`}
+						>
 							<Flame size={8} />
 							{st}
 						</span>

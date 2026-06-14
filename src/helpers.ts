@@ -50,3 +50,28 @@ export function isDone(habit: Habit, v: number | null | undefined) {
 
 	return habit.type === 'num' ? Number(v) >= (habit.goal || 1) : v === 1;
 }
+
+export function streak(habit: Habit) {
+	let streak = 0;
+	let counter = 0;
+	let d = addDays(getStartOfWeek(new Date()), -7);
+
+	while (true) {
+		let finishedCount = 0;
+
+		for (let i = 0; i < 7; i++) {
+			if (isDone(habit, habit.log[dateKey(addDays(d, i))])) {
+				finishedCount++;
+			}
+		}
+
+		if (finishedCount >= habit.goal) {
+			d = addDays(getStartOfWeek(d), -7);
+			streak++;
+		} else {
+			break;
+		}
+	}
+
+	return streak;
+}
