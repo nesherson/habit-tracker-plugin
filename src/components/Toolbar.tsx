@@ -47,21 +47,6 @@ export function Toolbar({
 		return label;
 	}, [startOfWeek]);
 
-	const pct = useMemo(() => {
-		const allDays = getWeekDays();
-		const todayKey = dateKey(new Date());
-		let doneCells = 0,
-			totalCells = 0;
-
-		habits.forEach((h) => {
-			const r = weekRate(h, allDays, todayKey);
-
-			doneCells += r.score;
-			totalCells += r.denom;
-		});
-		return totalCells ? Math.round((doneCells / totalCells) * 100) : 0;
-	}, []);
-
 	return (
 		<div className="ht-toolbar">
 			<div className="ht-weeknav">
@@ -75,10 +60,6 @@ export function Toolbar({
 				<button className="ht-todaybtn" onClick={handleThisWeekClick}>
 					This week
 				</button>
-			</div>
-			<div className="ht-toolbar-sum">
-				<span className="ht-toolbar-pct">{pct}</span>
-				<span className="ht-toolbar-cap">week complete</span>
 			</div>
 		</div>
 	);
