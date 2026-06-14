@@ -35,10 +35,13 @@ export function weekRate(habit: Habit, days: Date[]) {
 		0,
 	);
 
+	const completionPercentage =
+		score >= habit.goal ? 100 : Math.round((score / habit.goal) * 100);
+
 	return {
 		score,
 		denom: habit.goal,
-		pct: Math.round((score / habit.goal) * 100),
+		pct: completionPercentage,
 	};
 }
 
