@@ -12,7 +12,7 @@ import {
 import { KeyFocus, ToDo, Reading, Note } from '../types';
 import { HabitTrackerAction } from '../reducer';
 import { uid } from '../helpers';
-import { ChangeEvent, FocusEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, MouseEvent, useState } from 'react';
 
 interface SideProps {
 	focuses: KeyFocus[];
@@ -154,6 +154,7 @@ export function Side({ focuses, dispatch, todos, readings, notes }: SideProps) {
 								<div className="ht-focus-l">
 									{editItemId === f.id ? (
 										<input
+											className="ht-edit-text-input"
 											value={editText}
 											onChange={handleEditTextChange}
 											onBlur={() =>
@@ -271,26 +272,31 @@ function SidePanelList({
 							className="ht-task"
 							onClick={() => onItemClick(item)}
 						>
-							<span
-								className={`ht-cb ${item.done ? 'is-done' : ''}`}
-								onClick={(e) => onItemCheck(e, item)}
-							>
-								{item.done && <Check size={8} />}
-							</span>
-							<div
-								className={`ht-task-1 ${item.done ? 'is-done' : ''}`}
-							>
-								{editItemId === item.id ? (
-									<input
-										value={editText}
-										onChange={onEditTextChange}
-										onBlur={() => onEditTextBlur(item.id)}
-									/>
-								) : (
-									<span className="ht-edit-label">
-										{item.label}
-									</span>
-								)}
+							<div className="ht-task-left">
+								<span
+									className={`ht-cb ${item.done ? 'is-done' : ''}`}
+									onClick={(e) => onItemCheck(e, item)}
+								>
+									{item.done && <Check size={8} />}
+								</span>
+								<div
+									className={`ht-task-1 ${item.done ? 'is-done' : ''}`}
+								>
+									{editItemId === item.id ? (
+										<input
+											className="ht-edit-text-input"
+											value={editText}
+											onChange={onEditTextChange}
+											onBlur={() =>
+												onEditTextBlur(item.id)
+											}
+										/>
+									) : (
+										<span className="ht-edit-label">
+											{item.label}
+										</span>
+									)}
+								</div>
 							</div>
 							<button
 								className="ht-rowdel ht-rowdel-sm"
