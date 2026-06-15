@@ -3,7 +3,9 @@ import { addDays, dateKey, isDone, streak, uid, weekRate } from '../helpers';
 import { HabitTrackerAction } from '../reducer';
 import { Habit } from '../types';
 import { Ring } from './Ring';
-import { Check, X, Flame, Plus } from 'lucide-react';
+import { Check, X, Plus } from 'lucide-react';
+
+import streakFireUrl from '../assets/streak-fire.svg';
 
 /* per-habit accent palette (works on light & dark themes) */
 const PALETTE: Record<string, string> = {
@@ -132,7 +134,7 @@ function HabitRow({ habit, days, todayKey, dispatch }: HabitRowProps) {
 							className="ht-streak"
 							title={`Streak of ${st} ${st === 1 ? 'week' : 'weeks'}`}
 						>
-							<Flame size={8} />
+							<img src={streakFireUrl} width={12} height={12} />
 							{st}
 						</span>
 					)}
