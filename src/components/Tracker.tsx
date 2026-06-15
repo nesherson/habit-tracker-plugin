@@ -1,14 +1,13 @@
-import { seedLog, WEEK_DAYS } from '../data';
-import { addDays, dateKey, isDone, streak, uid, weekRate } from '../helpers';
+import { WEEK_DAYS } from '../data';
+import { addDays, dateKey, isDone, streak, weekRate } from '../helpers';
 import { Habit } from '../types';
 import { Ring } from './Ring';
-import { Check, X, Plus } from 'lucide-react';
-import { AddHabitModal } from './AddHabitModal';
+import { Check, X, Plus, Flame, Zap, Crown, Trophy } from 'lucide-react';
+import { EditHabitModal } from './EditHabitModal';
 
 import streakFireUrl from '../assets/streak-fire.svg';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useHabit } from '../context/habitTrackerContext';
-import { PALETTE } from '../palette';
 
 interface TrackerProps {
 	startOfWeek: Date;
@@ -17,6 +16,7 @@ interface TrackerProps {
 
 export function Tracker({ startOfWeek, habits }: TrackerProps) {
 	const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
+	const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
 
 	const getWeekDays = () => {
 		return WEEK_DAYS.map((_, i) => addDays(startOfWeek, i));
@@ -25,9 +25,15 @@ export function Tracker({ startOfWeek, habits }: TrackerProps) {
 	const days = getWeekDays();
 	const todayKey = dateKey(new Date());
 
-	function handleOpenAddHabitModal(): void {
+	const handleOpenAddHabitModal = () => {
+		setSelectedHabit(null);
 		setIsAddHabitModalOpen(true);
-	}
+	};
+
+	const handleFirstCellDoubleClick = (habit: Habit) => {
+		setSelectedHabit(habit);
+		setIsAddHabitModalOpen(true);
+	};
 
 	return (
 		<div className="htrack">
@@ -65,12 +71,14 @@ export function Tracker({ startOfWeek, habits }: TrackerProps) {
 						habit={h}
 						days={days}
 						todayKey={todayKey}
+						onFirstCellDoubleClick={handleFirstCellDoubleClick}
 					/>
 				))}
 			</div>
-			<AddHabitModal
+			<EditHabitModal
 				isOpen={isAddHabitModalOpen}
 				onClose={() => setIsAddHabitModalOpen(false)}
+				habit={selectedHabit}
 			/>
 		</div>
 	);
@@ -80,15 +88,24 @@ interface HabitRowProps {
 	habit: Habit;
 	days: Date[];
 	todayKey: string;
+	onFirstCellDoubleClick: (habit: Habit) => void;
 }
 
-function HabitRow({ habit, days, todayKey }: HabitRowProps) {
+function HabitRow({
+	habit,
+	days,
+	todayKey,
+	onFirstCellDoubleClick,
+}: HabitRowProps) {
 	const rate = weekRate(habit, days);
 	const st = streak(habit);
 
 	return (
 		<div className="ht-row">
-			<div className="ht-name">
+			<div
+				onDoubleClick={() => onFirstCellDoubleClick(habit)}
+				className="ht-name"
+			>
 				<Ring
 					pct={rate.score / rate.denom}
 					color={habit.color}
@@ -123,7 +140,7 @@ function HabitRow({ habit, days, todayKey }: HabitRowProps) {
 							className="ht-streak"
 							title={`Streak of ${st} ${st === 1 ? 'week' : 'weeks'}`}
 						>
-							<img src={streakFireUrl} width={12} height={12} />
+							<Flame size={16} color="#d2922f" />
 							{st}
 						</span>
 					)}
@@ -143,6 +160,11 @@ interface HabitCellProps {
 function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
 	const { dispatch } = useHabit();
 
+	const [editItemId, setEditItemId] = useState<string | null>(null);
+	const [editNumber, setEditNumber] = useState<number>(
+		habit.log[dateKey(date)],
+	);
+
 	const key = dateKey(date);
 	const v = habit.log[key];
 	const done = isDone(habit, v);
@@ -154,6 +176,12 @@ function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
 	}
 
 	const handleOnClick = () => {
+		if (habit.type === 'num') {
+			setEditItemId(habit.id);
+
+			return;
+		}
+
 		dispatch({
 			type: 'UPDATE_HABIT_LOG',
 			payload: {
@@ -164,16 +192,41 @@ function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
 		});
 	};
 
+	const handleEditNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setEditNumber(Number(e.target.value));
+	};
+
+	const handleEditNumberBlur = () => {
+		setEditItemId(null);
+		dispatch({
+			type: 'UPDATE_HABIT_LOG',
+			payload: {
+				id: habit.id,
+				key: key,
+				value: editNumber,
+			},
+		});
+	};
+
 	return (
 		<div className={containerClassName} onClick={handleOnClick}>
 			{habit.type === 'num' ? (
 				<>
-					<span
-						style={{ color: done ? color : 'initial' }}
-						className={`ht-numval ${done ? 'is-met' : ''}`}
-					>
-						{v != null ? String(v) : '0'}
-					</span>
+					{editItemId === habit.id ? (
+						<input
+							className="ht-edit-text-input sm"
+							value={editNumber}
+							onChange={handleEditNumberChange}
+							onBlur={handleEditNumberBlur}
+						/>
+					) : (
+						<span
+							style={{ color: done ? color : 'initial' }}
+							className={`ht-numval ${done ? 'is-met' : ''}`}
+						>
+							{v != null ? String(v) : '0'}
+						</span>
+					)}
 					<span className="ht-numunit">{habit.unit}</span>
 				</>
 			) : (

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import Modal from './ui/modal/Modal';
 import { Habit } from '../types';
@@ -7,6 +7,7 @@ import { seedLog } from '../data';
 import { useHabit } from '../context/habitTrackerContext';
 import { ColorPicker } from './ui/form/colorPicker/ColorPicker';
 import { Input } from './ui/form/input/Input';
+import { Dropdown } from './ui/form/dropdown/Dropdown';
 
 interface FormState {
 	name: string;
@@ -24,15 +25,39 @@ const initialState: FormState = {
 	unit: '',
 };
 
-interface AddHabitModalProps {
+const typeOptions = [
+	{ label: 'Check', value: 'check' },
+	{ label: 'Number', value: 'number' },
+];
+
+interface EditHabitModalProps {
 	isOpen: boolean;
 	onClose: () => void;
+	habit: Habit | null;
 }
 
-export function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
+function getInitialState(habit: Habit | null) {
+	if (habit) {
+		return {
+			name: habit.name,
+			color: habit.color,
+			type: habit.type,
+			goal: habit.goal,
+			unit: habit.unit,
+		};
+	}
+
+	return initialState;
+}
+
+export function EditHabitModal({
+	isOpen,
+	onClose,
+	habit,
+}: EditHabitModalProps) {
 	const { dispatch } = useHabit();
 
-	const [form, setForm] = useState(initialState);
+	const [form, setForm] = useState(getInitialState(habit));
 	const [error, setError] = useState<string | null>(null);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,26 +84,37 @@ export function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
 		setError(null);
 
 		const newHabit: Habit = {
-			id: uid(),
+			id: habit?.id ?? uid(),
 			name: form.name,
 			color: form.color,
 			type: form.type,
 			goal: form.goal,
 			unit: form.unit,
-			log: seedLog([0, 0, 0, 0, 0, 0, 0]),
+			log: habit?.log ?? seedLog([0, 0, 0, 0, 0, 0, 0]),
 		};
 
 		dispatch({
-			type: 'ADD_HABIT',
+			type: habit === null ? 'ADD_HABIT' : 'UPDATE_HABIT',
 			payload: newHabit,
 		});
+		setForm(initialState);
 		onClose();
 	};
+
+	const handleClose = () => {
+		setForm(initialState);
+		setError(null);
+		onClose();
+	};
+
+	useEffect(() => {
+		if (habit) setForm(getInitialState(habit));
+	}, [habit]);
 
 	return (
 		<Modal
 			isOpen={isOpen}
-			onClose={onClose}
+			onClose={handleClose}
 			title="Add new habit"
 			footer={
 				<>
@@ -87,7 +123,7 @@ export function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
 				</>
 			}
 		>
-			<div className="ht-add-habit-form">
+			<div className="ht-edit-habit-form">
 				<Input
 					name="name"
 					label="Name"
@@ -106,12 +142,14 @@ export function AddHabitModal({ isOpen, onClose }: AddHabitModalProps) {
 					}
 					required
 				/>
-				<Input
-					name="type"
+				<Dropdown
 					label="Type"
-					placeholder="Enter type"
+					placeholder="Select habit type"
+					options={typeOptions}
 					value={form.type}
-					onChange={handleChange}
+					onChange={(val) =>
+						setForm((prev) => ({ ...prev, type: val }))
+					}
 					required
 				/>
 				<Input
