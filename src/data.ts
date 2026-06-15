@@ -1,4 +1,5 @@
 import { uid } from './helpers';
+import { PALETTE } from './palette';
 import { HabitTrackerState } from './types';
 
 export const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -21,7 +22,7 @@ export function seedLog(pattern: (number | null)[]) {
 	const log: Record<string, number> = {};
 
 	pattern.forEach((v, i) => {
-		if (v != null) log[seedKey(i - 13)] = v;
+		if (v != null) log[seedKey(i - pattern.length)] = v;
 	});
 
 	return log;
@@ -35,7 +36,7 @@ export function seedData(): HabitTrackerState {
 			{
 				id: uid(),
 				name: 'Wake up early',
-				color: 'violet',
+				color: '#7c6cdf',
 				type: 'check',
 				goal: 5,
 				log: C([1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0]),
@@ -43,7 +44,7 @@ export function seedData(): HabitTrackerState {
 			{
 				id: uid(),
 				name: 'Gym / Exercise',
-				color: 'blue',
+				color: '#4b86d8',
 				type: 'check',
 				goal: 1,
 				log: C([1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0]),
@@ -51,7 +52,7 @@ export function seedData(): HabitTrackerState {
 			{
 				id: uid(),
 				name: 'Read',
-				color: 'amber',
+				color: '#d2922f',
 				type: 'num',
 				goal: 30,
 				unit: 'pg',
@@ -60,7 +61,7 @@ export function seedData(): HabitTrackerState {
 			{
 				id: uid(),
 				name: 'Meditate',
-				color: 'rose',
+				color: '#d2647a',
 				type: 'check',
 				goal: 5,
 				log: C([1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1]),
@@ -68,7 +69,7 @@ export function seedData(): HabitTrackerState {
 			{
 				id: uid(),
 				name: 'Deep work session',
-				color: 'violet',
+				color: '#7c6cdf',
 				type: 'check',
 				goal: 1,
 				log: C([1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0]),
@@ -76,7 +77,7 @@ export function seedData(): HabitTrackerState {
 			{
 				id: uid(),
 				name: 'Run',
-				color: 'green',
+				color: '#3fa35f',
 				type: 'num',
 				goal: 3,
 				unit: 'mi',
@@ -87,7 +88,7 @@ export function seedData(): HabitTrackerState {
 			{
 				id: uid(),
 				name: 'Journal',
-				color: 'blue',
+				color: '#4b86d8',
 				type: 'check',
 				goal: 1,
 				log: C([1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0]),

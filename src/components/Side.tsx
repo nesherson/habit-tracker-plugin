@@ -10,19 +10,20 @@ import {
 	X,
 } from 'lucide-react';
 import { KeyFocus, ToDo, Reading, Note } from '../types';
-import { HabitTrackerAction } from '../reducer';
 import { uid } from '../helpers';
 import { ChangeEvent, MouseEvent, useState } from 'react';
+import { useHabit } from '../context/habitTrackerContext';
 
 interface SideProps {
 	focuses: KeyFocus[];
 	todos: ToDo[];
 	readings: Reading[];
 	notes: Note[];
-	dispatch: React.ActionDispatch<[action: HabitTrackerAction]>;
 }
 
-export function Side({ focuses, dispatch, todos, readings, notes }: SideProps) {
+export function Side({ focuses, todos, readings, notes }: SideProps) {
+	const { dispatch } = useHabit();
+
 	const [editItemId, setEditItemId] = useState<string | null>(null);
 	const [editText, setEditText] = useState('');
 

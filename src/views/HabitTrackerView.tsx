@@ -1,7 +1,7 @@
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 import { StrictMode } from 'react';
 import { Root, createRoot } from 'react-dom/client';
-import { ReactView } from '../components/ReactView';
+import { App } from '../components/App';
 import HabitTracker from '../main';
 import { getStartOfWeek } from '../helpers';
 import { HabitTrackerState } from '../types';
@@ -35,7 +35,7 @@ export class HabitTrackerView extends ItemView {
 		this.root = createRoot(this.containerEl);
 		this.root.render(
 			<StrictMode>
-				<ReactView initialState={this.data} />
+				<App initialState={this.data} />
 			</StrictMode>,
 		);
 

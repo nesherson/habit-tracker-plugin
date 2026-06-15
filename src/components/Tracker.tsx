@@ -1,31 +1,23 @@
 import { seedLog, WEEK_DAYS } from '../data';
 import { addDays, dateKey, isDone, streak, uid, weekRate } from '../helpers';
-import { HabitTrackerAction } from '../reducer';
 import { Habit } from '../types';
 import { Ring } from './Ring';
 import { Check, X, Plus } from 'lucide-react';
+import { AddHabitModal } from './AddHabitModal';
 
 import streakFireUrl from '../assets/streak-fire.svg';
-
-/* per-habit accent palette (works on light & dark themes) */
-const PALETTE: Record<string, string> = {
-	violet: '#7c6cdf',
-	blue: '#4b86d8',
-	teal: '#2aa39a',
-	green: '#3fa35f',
-	amber: '#d2922f',
-	rose: '#d2647a',
-};
-
-const PALETTE_KEYS = Object.keys(PALETTE);
+import { useState } from 'react';
+import { useHabit } from '../context/habitTrackerContext';
+import { PALETTE } from '../palette';
 
 interface TrackerProps {
 	startOfWeek: Date;
 	habits: Habit[];
-	dispatch: React.ActionDispatch<[action: HabitTrackerAction]>;
 }
 
-export function Tracker({ startOfWeek, habits, dispatch }: TrackerProps) {
+export function Tracker({ startOfWeek, habits }: TrackerProps) {
+	const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
+
 	const getWeekDays = () => {
 		return WEEK_DAYS.map((_, i) => addDays(startOfWeek, i));
 	};
@@ -33,25 +25,24 @@ export function Tracker({ startOfWeek, habits, dispatch }: TrackerProps) {
 	const days = getWeekDays();
 	const todayKey = dateKey(new Date());
 
-	function handleAddHabitClick(): void {
-		dispatch({
-			type: 'ADD_HABIT',
-			payload: {
-				id: uid(),
-				name: 'Test',
-				color: '',
-				type: '',
-				goal: 0,
-				unit: '',
-				log: seedLog([1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0]),
-			},
-		});
+	function handleOpenAddHabitModal(): void {
+		setIsAddHabitModalOpen(true);
 	}
 
 	return (
 		<div className="htrack">
 			<div className="ht-head">
-				<div className="ht-corner">Habit</div>
+				<div className="ht-corner">
+					<span>Habit</span>
+					<button
+						className="ht-addhabit"
+						title="Add new habit"
+						onClick={handleOpenAddHabitModal}
+					>
+						<Plus size={3} />
+					</button>
+				</div>
+
 				{days.map((d) => {
 					return (
 						<div
@@ -74,16 +65,13 @@ export function Tracker({ startOfWeek, habits, dispatch }: TrackerProps) {
 						habit={h}
 						days={days}
 						todayKey={todayKey}
-						dispatch={dispatch}
 					/>
 				))}
 			</div>
-			<div className="ht-foot">
-				<button className="ht-addhabit" onClick={handleAddHabitClick}>
-					<Plus size={12} />
-					New Habit
-				</button>
-			</div>
+			<AddHabitModal
+				isOpen={isAddHabitModalOpen}
+				onClose={() => setIsAddHabitModalOpen(false)}
+			/>
 		</div>
 	);
 }
@@ -92,20 +80,22 @@ interface HabitRowProps {
 	habit: Habit;
 	days: Date[];
 	todayKey: string;
-	dispatch: React.ActionDispatch<[action: HabitTrackerAction]>;
 }
 
-function HabitRow({ habit, days, todayKey, dispatch }: HabitRowProps) {
-	const color = PALETTE[habit.color] || PALETTE.violet!;
+function HabitRow({ habit, days, todayKey }: HabitRowProps) {
 	const rate = weekRate(habit, days);
 	const st = streak(habit);
 
 	return (
 		<div className="ht-row">
 			<div className="ht-name">
-				<Ring pct={rate.score / rate.denom} color={color} size={20} />
+				<Ring
+					pct={rate.score / rate.denom}
+					color={habit.color}
+					size={20}
+				/>
 				<span
-					style={{ color: color }}
+					style={{ color: habit.color }}
 					className="ht-edit-label ht-habit-name"
 				>
 					{habit.name}
@@ -122,12 +112,11 @@ function HabitRow({ habit, days, todayKey, dispatch }: HabitRowProps) {
 					habit={habit}
 					date={d}
 					todayKey={todayKey}
-					color={color}
-					dispatch={dispatch}
+					color={habit.color}
 				/>
 			))}
 			<div className="ht-sumc">
-				<span className="ht-rate" style={{ color: color }}>
+				<span className="ht-rate" style={{ color: habit.color }}>
 					{rate.pct}%
 					{st >= 1 && (
 						<span
@@ -149,10 +138,11 @@ interface HabitCellProps {
 	date: Date;
 	todayKey: string;
 	color: string;
-	dispatch: React.ActionDispatch<[action: HabitTrackerAction]>;
 }
 
-function HabitCell({ habit, date, todayKey, color, dispatch }: HabitCellProps) {
+function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
+	const { dispatch } = useHabit();
+
 	const key = dateKey(date);
 	const v = habit.log[key];
 	const done = isDone(habit, v);
