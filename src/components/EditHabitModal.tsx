@@ -1,33 +1,38 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import Modal from './ui/modal/Modal';
-import { Habit } from '../types';
+import { Habit, HabitType, HabitUnit } from '../types';
 import { uid } from '../helpers';
 import { seedLog } from '../data';
 import { useHabit } from '../context/habitTrackerContext';
 import { ColorPicker } from './ui/form/colorPicker/ColorPicker';
 import { Input } from './ui/form/input/Input';
-import { Dropdown } from './ui/form/dropdown/Dropdown';
+import { Dropdown, DropdownOption } from './ui/form/dropdown/Dropdown';
 
 interface FormState {
 	name: string;
 	color: string;
-	type: string;
+	type: HabitType;
 	goal: number;
-	unit: string;
+	unit?: HabitUnit;
 }
 
 const initialState: FormState = {
 	name: '',
 	color: '',
-	type: '',
+	type: 'check',
 	goal: 1,
-	unit: '',
+	unit: undefined,
 };
 
-const typeOptions = [
+const typeOptions: DropdownOption<HabitType>[] = [
 	{ label: 'Check', value: 'check' },
-	{ label: 'Number', value: 'number' },
+	{ label: 'Number', value: 'num' },
+];
+
+const unitOptions: DropdownOption<HabitUnit>[] = [
+	{ label: 'Pages', value: 'pg' },
+	{ label: 'Miles', value: 'mi' },
 ];
 
 interface EditHabitModalProps {
@@ -73,8 +78,8 @@ export function EditHabitModal({
 		if (
 			form.name === '' ||
 			form.color === '' ||
-			form.type === '' ||
-			form.goal === 0
+			form.goal === 0 ||
+			(form.type === 'num' && !form.unit)
 		) {
 			setError('Please enter required values');
 
@@ -115,7 +120,7 @@ export function EditHabitModal({
 		<Modal
 			isOpen={isOpen}
 			onClose={handleClose}
-			title="Add new habit"
+			title={`${habit === null ? 'Add new' : 'Edit'} habit`}
 			footer={
 				<>
 					<button onClick={onClose}>Cancel</button>
@@ -152,13 +157,18 @@ export function EditHabitModal({
 					}
 					required
 				/>
-				<Input
-					name="unit"
-					label="Unit"
-					placeholder="Enter unit"
-					value={form.unit}
-					onChange={handleChange}
-				/>
+				{form.type === 'num' && (
+					<Dropdown
+						label="Unit"
+						placeholder="Select unit"
+						options={unitOptions}
+						value={form.unit}
+						onChange={(val) =>
+							setForm((prev) => ({ ...prev, unit: val }))
+						}
+						required
+					/>
+				)}
 				<Input
 					name="goal"
 					label="Goal"
