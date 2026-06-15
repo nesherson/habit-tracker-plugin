@@ -15,6 +15,8 @@ interface TrackerProps {
 }
 
 export function Tracker({ startOfWeek, habits }: TrackerProps) {
+	const { dispatch } = useHabit();
+
 	const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
 	const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
 
@@ -33,6 +35,15 @@ export function Tracker({ startOfWeek, habits }: TrackerProps) {
 	const handleFirstCellDoubleClick = (habit: Habit) => {
 		setSelectedHabit(habit);
 		setIsAddHabitModalOpen(true);
+	};
+
+	const handleDeleteBtnClick = (habit: Habit) => {
+		dispatch({
+			type: 'REMOVE_HABIT',
+			payload: {
+				id: habit.id,
+			},
+		});
 	};
 
 	return (
@@ -72,6 +83,7 @@ export function Tracker({ startOfWeek, habits }: TrackerProps) {
 						days={days}
 						todayKey={todayKey}
 						onFirstCellDoubleClick={handleFirstCellDoubleClick}
+						onDeleteBtnClick={handleDeleteBtnClick}
 					/>
 				))}
 			</div>
@@ -89,6 +101,7 @@ interface HabitRowProps {
 	days: Date[];
 	todayKey: string;
 	onFirstCellDoubleClick: (habit: Habit) => void;
+	onDeleteBtnClick: (habit: Habit) => void;
 }
 
 function HabitRow({
@@ -96,6 +109,7 @@ function HabitRow({
 	days,
 	todayKey,
 	onFirstCellDoubleClick,
+	onDeleteBtnClick,
 }: HabitRowProps) {
 	const rate = weekRate(habit, days);
 	const st = streak(habit);
@@ -122,6 +136,12 @@ function HabitRow({
 						</span>
 					)}
 				</span>
+				<button
+					className="ht-rowdel ht-rowdel-sm"
+					onClick={() => onDeleteBtnClick(habit)}
+				>
+					<X size={8} />
+				</button>
 			</div>
 			{days.map((d) => (
 				<HabitCell

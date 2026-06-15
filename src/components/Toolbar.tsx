@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
-import { addDays, dateKey, weekRate, getStartOfWeek } from '../helpers';
+import { addDays, getStartOfWeek } from '../helpers';
 import { WEEK_DAYS } from '../data';
 import { Habit } from '../types';
 

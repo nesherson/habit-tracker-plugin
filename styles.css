@@ -348,7 +348,7 @@
 	position: static;
 	transform: none;
 }
-.ht-name:hover .ht-rowdel,
+.ht-row:hover .ht-rowdel,
 .ht-focus:hover .ht-rowdel,
 .ht-task:hover .ht-rowdel,
 .ht-noterow:hover .ht-rowdel {
