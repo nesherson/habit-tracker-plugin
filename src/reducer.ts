@@ -59,7 +59,7 @@ export const initialState: HabitTrackerState = {
 	habits: [],
 	focuses: [],
 	todos: [],
-	reading: [],
+	readings: [],
 	notes: [],
 };
 
