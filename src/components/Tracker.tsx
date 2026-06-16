@@ -160,7 +160,7 @@ function HabitRow({
 							className="ht-streak"
 							title={`Streak of ${st} ${st === 1 ? 'week' : 'weeks'}`}
 						>
-							<Flame size={16} color="#d2922f" />
+							<Flame size={14} color="#d2922f" />
 							{st}
 						</span>
 					)}
