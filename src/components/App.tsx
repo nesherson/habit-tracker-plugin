@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { HabitTrackerState } from '../types';
 import { Toolbar } from './Toolbar';
 import { Tracker } from './Tracker';
@@ -6,21 +6,45 @@ import { habitTrackerReducer } from '../reducer';
 import { Side } from './Side';
 import { getStartOfWeek } from '../helpers';
 import { HabitTrackerContext } from '../context/habitTrackerContext';
+import HabitTracker from '../main';
 
-interface ReactViewProps {
+interface AppProps {
 	initialState: HabitTrackerState;
+	plugin: HabitTracker;
 }
 
-export function App({ initialState }: ReactViewProps) {
+export function App({ initialState, plugin }: AppProps) {
 	const [startOfWeek, setStartOfWeek] = useState(getStartOfWeek(new Date()));
 	const [state, dispatch] = useReducer(habitTrackerReducer, initialState);
+	const [isLoaded, setIsLoaded] = useState(false);
 
 	const handleStartOfWeekChange = (newDate: Date) => {
 		setStartOfWeek(getStartOfWeek(newDate));
 	};
 
+	useEffect(() => {
+		if (!isLoaded) return;
+
+		const timer = window.setTimeout(async () => {
+			await plugin.savePluginData({ state });
+		}, 500);
+
+		return () => window.clearTimeout(timer);
+	}, [state, isLoaded]);
+
+	useEffect(() => {
+		const saved = plugin.data?.state;
+
+		dispatch({ type: 'LOAD_STATE', payload: saved });
+		setIsLoaded(true);
+	}, []);
+
+	if (!isLoaded) return <div>Loading...</div>;
+
 	return (
-		<HabitTrackerContext.Provider value={{ state, dispatch }}>
+		<HabitTrackerContext.Provider
+			value={{ state, dispatch, app: plugin.app }}
+		>
 			<div className="ht-root">
 				<Toolbar
 					startOfWeek={startOfWeek}

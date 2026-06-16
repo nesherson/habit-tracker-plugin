@@ -1,11 +1,8 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import HabitTracker from './main';
+import { HabitTrackerSettings } from './types';
 
-export interface Settings {
-	mySetting: string;
-}
-
-export const DEFAULT_SETTINGS: Settings = {
+export const DEFAULT_SETTINGS: HabitTrackerSettings = {
 	mySetting: 'default',
 };
 
@@ -28,10 +25,12 @@ export class HabitTrackerSettingTab extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder('Enter your secret')
-					.setValue(this.plugin.settings.mySetting)
+					.setValue(this.plugin.data?.settings.mySetting ?? '')
 					.onChange(async (value) => {
-						this.plugin.settings.mySetting = value;
-						await this.plugin.saveSettings();
+						this.plugin.data.settings.mySetting = value;
+						await this.plugin.savePluginData({
+							settings: this.plugin.data.settings,
+						});
 					}),
 			);
 	}

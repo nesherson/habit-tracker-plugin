@@ -51,7 +51,8 @@ export type HabitTrackerAction =
 			type: 'UPDATE_NOTE';
 			payload: { id: string } & Partial<Omit<Note, 'id'>>;
 	  }
-	| { type: 'REMOVE_NOTE'; payload: { id: string } };
+	| { type: 'REMOVE_NOTE'; payload: { id: string } }
+	| { type: 'LOAD_STATE'; payload: HabitTrackerState };
 
 // ─── Initial State ───────────────────────────────────────────────────────────
 
@@ -230,6 +231,9 @@ export function habitTrackerReducer(
 				...state,
 				notes: removeById(state.notes, action.payload.id),
 			};
+
+		case 'LOAD_STATE':
+			return action.payload;
 
 		default:
 			return state;

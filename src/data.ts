@@ -1,10 +1,15 @@
 import { uid } from './helpers';
-import { PALETTE } from './palette';
-import { HabitTrackerState } from './types';
+import { initialState } from './reducer';
+import { DEFAULT_SETTINGS } from './settings';
+import { HabitTrackerState, PluginData } from './types';
 
 export const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-/* ---------------------------------------------------------------- defaults */
+export const defaultPluginData: PluginData = {
+	state: initialState,
+	settings: DEFAULT_SETTINGS,
+};
+
 export function seedKey(offset: number) {
 	const d = new Date();
 
@@ -17,7 +22,7 @@ export function seedKey(offset: number) {
 
 	return `${y}-${m}-${day}`;
 }
-/* turn a pattern of recent days (index 0 = 13 days ago … 13 = today) into a log */
+
 export function seedLog(pattern: (number | null)[]) {
 	const log: Record<string, number> = {};
 
@@ -28,8 +33,8 @@ export function seedLog(pattern: (number | null)[]) {
 	return log;
 }
 export function seedData(): HabitTrackerState {
-	const C = (p: (number | null)[]) => seedLog(p); // check habit
-	const N = (p: (number | null)[]) => seedLog(p); // measurable
+	const C = (p: (number | null)[]) => seedLog(p);
+	const N = (p: (number | null)[]) => seedLog(p);
 
 	return {
 		habits: [

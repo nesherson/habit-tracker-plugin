@@ -3,20 +3,16 @@ import { StrictMode } from 'react';
 import { Root, createRoot } from 'react-dom/client';
 import { App } from '../components/App';
 import HabitTracker from '../main';
-import { getStartOfWeek } from '../helpers';
-import { HabitTrackerState } from '../types';
 
 export const HABIT_TRACKER_VIEW_TYPE = 'habit-tracker-view';
 
 export class HabitTrackerView extends ItemView {
 	root: Root | null = null;
 	plugin: HabitTracker;
-	ref: Date;
 
 	constructor(leaf: WorkspaceLeaf, plugin: HabitTracker) {
 		super(leaf);
 		this.plugin = plugin;
-		this.ref = getStartOfWeek(new Date());
 	}
 
 	getViewType(): string {
@@ -24,18 +20,18 @@ export class HabitTrackerView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return 'Habit Tracker';
+		return 'Habit tracker';
 	}
 
 	get data() {
-		return this.plugin.data as HabitTrackerState;
+		return this.plugin.data;
 	}
 
 	protected onOpen(): Promise<void> {
 		this.root = createRoot(this.containerEl);
 		this.root.render(
 			<StrictMode>
-				<App initialState={this.data} />
+				<App initialState={this.data.state} plugin={this.plugin} />
 			</StrictMode>,
 		);
 

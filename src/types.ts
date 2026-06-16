@@ -1,3 +1,12 @@
+export interface PluginData {
+	state: HabitTrackerState;
+	settings: HabitTrackerSettings;
+}
+
+export interface HabitTrackerSettings {
+	mySetting: string;
+}
+
 export interface HabitTrackerState {
 	habits: Habit[];
 	focuses: KeyFocus[];

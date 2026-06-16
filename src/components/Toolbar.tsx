@@ -2,8 +2,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
 
 import { addDays, getStartOfWeek } from '../helpers';
-import { WEEK_DAYS } from '../data';
+import { seedData, WEEK_DAYS } from '../data';
 import { Habit } from '../types';
+import { useHabit } from '../context/habitTrackerContext';
+import { initialState } from '../reducer';
 
 interface ToolbarProps {
 	startOfWeek: Date;
@@ -16,6 +18,7 @@ export function Toolbar({
 	habits,
 	startOfWeekOnChange,
 }: ToolbarProps) {
+	const { dispatch } = useHabit();
 	const handleLeftNavBtnClick = () => {
 		startOfWeekOnChange(addDays(startOfWeek, -7));
 	};
@@ -26,6 +29,13 @@ export function Toolbar({
 
 	const handleThisWeekClick = () => {
 		startOfWeekOnChange(getStartOfWeek(new Date()));
+	};
+
+	const handleAddTestDataClick = () => {
+		dispatch({
+			type: 'LOAD_STATE',
+			payload: seedData(),
+		});
 	};
 
 	const getWeekDays = () => {
@@ -59,6 +69,12 @@ export function Toolbar({
 				</button>
 				<button className="ht-todaybtn" onClick={handleThisWeekClick}>
 					This week
+				</button>
+				<button
+					className="ht-todaybtn"
+					onClick={handleAddTestDataClick}
+				>
+					Test data
 				</button>
 			</div>
 		</div>

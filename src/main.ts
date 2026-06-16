@@ -1,31 +1,30 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian';
 
-import { DEFAULT_SETTINGS, Settings, HabitTrackerSettingTab } from './settings';
+import { HabitTrackerSettingTab } from './settings';
 import {
 	HABIT_TRACKER_VIEW_TYPE,
 	HabitTrackerView,
 } from './views/HabitTrackerView';
-import { HabitTrackerState } from './types';
-import { seedData } from './data';
+import { PluginData } from './types';
+import { defaultPluginData } from './data';
 
 export default class HabitTracker extends Plugin {
-	settings: Settings | null = null;
-	data: HabitTrackerState | null = null;
+	data: PluginData = defaultPluginData;
 
 	async onload() {
-		const saved = (await this.loadData()) as HabitTrackerState;
+		const saved = (await this.loadData()) as PluginData;
 
-		await this.loadSettings();
-
-		this.data = saved && saved.habits ? saved : seedData();
+		if (saved) {
+			this.data = saved;
+		}
 
 		this.registerView(
 			HABIT_TRACKER_VIEW_TYPE,
 			(leaf) => new HabitTrackerView(leaf, this),
 		);
 
-		this.addRibbonIcon('dice', 'Sample', (_evt: MouseEvent) => {
-			this.activateView();
+		this.addRibbonIcon('dice', 'Sample', async (_evt: MouseEvent) => {
+			await this.activateView();
 		});
 
 		this.addSettingTab(new HabitTrackerSettingTab(this.app, this));
@@ -36,15 +35,12 @@ export default class HabitTracker extends Plugin {
 	async activateView() {
 		const { workspace } = this.app;
 
-		let leaf: WorkspaceLeaf | null = null;
+		let leaf: WorkspaceLeaf | undefined = undefined;
 		const leaves = workspace.getLeavesOfType(HABIT_TRACKER_VIEW_TYPE);
 
 		if (leaves.length > 0) {
-			// A leaf with our view already exists, use that
 			leaf = leaves[0];
 		} else {
-			// Our view could not be found in the workspace, create a new leaf
-			// in the right sidebar for it
 			leaf = workspace.getLeaf(true);
 			await leaf.setViewState({
 				type: HABIT_TRACKER_VIEW_TYPE,
@@ -52,19 +48,14 @@ export default class HabitTracker extends Plugin {
 			});
 		}
 
-		// "Reveal" the leaf in case it is in a collapsed sidebar
-		workspace.revealLeaf(leaf);
+		if (leaf) {
+			await workspace.revealLeaf(leaf);
+		}
 	}
 
-	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			(await this.loadData()) as Partial<Settings>,
-		);
-	}
+	async savePluginData(updates: Partial<PluginData>) {
+		this.data = { ...this.data, ...updates };
 
-	async saveSettings() {
-		await this.saveData(this.settings);
+		await this.saveData(this.data);
 	}
 }
