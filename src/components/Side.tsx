@@ -7,12 +7,15 @@ import {
 	LucideIcon,
 	Pencil,
 	Plus,
+	SquareArrowOutDownLeft,
 	X,
 } from 'lucide-react';
 import { KeyFocus, ToDo, Reading, Note } from '../types';
 import { uid } from '../helpers';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { useHabit } from '../context/habitTrackerContext';
+import { HT_NOTES_PATH } from '../constants';
+import { TFile } from 'obsidian';
 
 interface SideProps {
 	focuses: KeyFocus[];
@@ -22,7 +25,7 @@ interface SideProps {
 }
 
 export function Side({ focuses, todos, readings, notes }: SideProps) {
-	const { dispatch } = useHabit();
+	const { dispatch, app } = useHabit();
 
 	const [editItemId, setEditItemId] = useState<string | null>(null);
 	const [editText, setEditText] = useState('');
@@ -114,7 +117,11 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 	};
 
 	const handleEditTextBlur = (
-		actionType: 'UPDATE_FOCUS' | 'UPDATE_TODO' | 'UPDATE_READING',
+		actionType:
+			| 'UPDATE_FOCUS'
+			| 'UPDATE_TODO'
+			| 'UPDATE_READING'
+			| 'UPDATE_NOTE',
 		id: string,
 	) => {
 		const text = editText;
@@ -128,6 +135,43 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 				label: text,
 			},
 		});
+	};
+
+	const handleAddNote = async () => {
+		const noteId = uid();
+		const noteLabel = 'Untitled note';
+		dispatch({
+			type: 'ADD_NOTE',
+			payload: {
+				id: noteId,
+				label: noteLabel,
+			},
+		});
+
+		const path = `${HT_NOTES_PATH}/${noteLabel}.md`;
+		const content = `---\nht-id: ${noteId}\n---\n\n#`;
+
+		await app.vault.create(path, content);
+	};
+
+	const handleDeleteNote = (noteId: string) => {
+		dispatch({
+			type: 'REMOVE_NOTE',
+			payload: {
+				id: noteId,
+			},
+		});
+	};
+
+	const handleOpenNote = async (note: Note) => {
+		// const path = `HabitTracker/Notes/${note.label}.md`;
+		// const content = `---\nht-id: ${note.id}\n---\n\n# ${note.label}\n`;
+		// await app.vault.create(path, content);
+		const file = app.vault.getAbstractFileByPath(
+			`${HT_NOTES_PATH}/${note.label}.md`,
+		) as TFile;
+
+		await app.workspace.getLeaf(false).openFile(file);
 	};
 
 	return (
@@ -221,7 +265,17 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 					handleEditTextBlur('UPDATE_READING', id)
 				}
 			/>
-			<Notes notes={notes} onAdd={() => {}} onDelete={() => {}} />
+			<Notes
+				notes={notes}
+				onClick={handleItemClick}
+				onAdd={handleAddNote}
+				onDelete={handleDeleteNote}
+				editItemId={editItemId}
+				editText={editText}
+				onEditTextChange={handleEditTextChange}
+				onEditTextBlur={(id) => handleEditTextBlur('UPDATE_NOTE', id)}
+				onOpenNote={handleOpenNote}
+			/>
 		</div>
 	);
 }
@@ -315,11 +369,27 @@ function SidePanelList({
 
 interface NotesProps {
 	notes: Note[];
+	onClick: (note: Note) => void;
 	onAdd: () => void;
-	onDelete: () => void;
+	onDelete: (noteId: string) => void;
+	editItemId: string | null;
+	editText: string;
+	onEditTextChange: (e: ChangeEvent<HTMLInputElement>) => void;
+	onEditTextBlur: (id: string) => void;
+	onOpenNote: (note: Note) => void;
 }
 
-function Notes({ notes, onAdd, onDelete }: NotesProps) {
+function Notes({
+	notes,
+	onClick,
+	onAdd,
+	onDelete,
+	editItemId,
+	editText,
+	onEditTextChange,
+	onEditTextBlur,
+	onOpenNote,
+}: NotesProps) {
 	return (
 		<div className="ht-sec">
 			<div className="ht-sh">
@@ -336,20 +406,44 @@ function Notes({ notes, onAdd, onDelete }: NotesProps) {
 				{notes.map((note) => {
 					return (
 						<div key={note.id} className="ht-noterow">
-							<span className="ht-note-icon">
-								<FileText size={8} />
-							</span>
-							<div className="ht-note-1">
-								<span className="ht-edit-label">
-									{note.label}
+							<div className="ht-noterow-left">
+								<span className="ht-note-icon">
+									<FileText size={8} />
 								</span>
+								<div className="ht-note-1">
+									{editItemId === note.id ? (
+										<input
+											className="ht-edit-text-input"
+											value={editText}
+											onChange={onEditTextChange}
+											onBlur={() =>
+												onEditTextBlur(note.id)
+											}
+										/>
+									) : (
+										<span
+											className="ht-edit-label"
+											onClick={() => onClick(note)}
+										>
+											{note.label}
+										</span>
+									)}
+								</div>
 							</div>
-							<button
-								className="ht-rowdel ht-rowdel-sm"
-								onClick={() => onDelete()}
-							>
-								<Pencil size={8} />
-							</button>
+							<div className="ht-option-buttons">
+								<button
+									className="ht-rowdel ht-rowdel-sm"
+									onClick={() => onOpenNote(note)}
+								>
+									<SquareArrowOutDownLeft size={8} />
+								</button>
+								<button
+									className="ht-rowdel ht-rowdel-sm"
+									onClick={() => onDelete(note.id)}
+								>
+									<X size={8} />
+								</button>
+							</div>
 						</div>
 					);
 				})}

@@ -535,9 +535,14 @@
 .ht-noterow {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	justify-content: space-between;
 	padding: 5px 6px;
 	border-radius: 6px;
+}
+.ht-noterow-left {
+	display: flex;
+	gap: 4px;
+	align-items: center;
 }
 .ht-noterow:hover {
 	background: var(--background-modifier-hover);
@@ -581,6 +586,11 @@
 
 .ht-btn-primary {
 	background-color: "#7c6cdf";
+}
+
+.ht-option-buttons {
+	display: flex;
+	gap: 4px;
 }
 
 /* modal */

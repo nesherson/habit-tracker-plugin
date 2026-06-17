@@ -35,6 +35,8 @@ export function App({ initialState, plugin }: AppProps) {
 	useEffect(() => {
 		const saved = plugin.data?.state;
 
+		plugin.dispatch = dispatch;
+
 		dispatch({ type: 'LOAD_STATE', payload: saved });
 		setIsLoaded(true);
 	}, []);

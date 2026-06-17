@@ -1,3 +1,4 @@
+import { App, TFile } from 'obsidian';
 import { Habit } from './types';
 
 export function uid() {
@@ -74,4 +75,10 @@ export function streak(habit: Habit) {
 	}
 
 	return streak;
+}
+
+export function getNoteId(app: App, file: TFile): string | null {
+	const cache = app.metadataCache.getFileCache(file);
+
+	return (cache?.frontmatter?.['ht-id'] as string | undefined) ?? null;
 }
