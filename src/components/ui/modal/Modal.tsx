@@ -1,12 +1,12 @@
 import { X } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, MouseEvent } from 'react';
 
 interface ModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	title?: React.ReactNode;
-	footer?: React.ReactNode;
-	children: React.ReactNode;
+	title?: ReactNode;
+	footer?: ReactNode;
+	children: ReactNode;
 }
 
 export default function Modal({
@@ -25,18 +25,18 @@ export default function Modal({
 			if (e.key === 'Escape') onClose();
 		};
 
-		document.addEventListener('keydown', handleKeyDown);
-		document.body.style.overflow = 'hidden';
+		activeDocument.addEventListener('keydown', handleKeyDown);
+		activeDocument.body.addClass('overflow-hidden');
 
 		return () => {
-			document.removeEventListener('keydown', handleKeyDown);
-			document.body.style.overflow = '';
+			activeDocument.removeEventListener('keydown', handleKeyDown);
+			activeDocument.body.removeClass('overflow-hidden');
 		};
 	}, [isOpen, onClose]);
 
 	if (!isOpen) return null;
 
-	const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+	const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
 		if (e.target === e.currentTarget) onClose();
 	};
 

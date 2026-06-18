@@ -54,7 +54,6 @@ export function isDone(habit: Habit, v: number | null | undefined) {
 
 export function streak(habit: Habit) {
 	let streak = 0;
-	let counter = 0;
 	let d = addDays(getStartOfWeek(new Date()), -7);
 
 	while (true) {
@@ -77,8 +76,12 @@ export function streak(habit: Habit) {
 	return streak;
 }
 
-export function getNoteId(app: App, file: TFile): string | null {
-	const cache = app.metadataCache.getFileCache(file);
+export async function addFrontmatterToFile(app: App, file: TFile, id: string) {
+	await app.vault.process(file, (content) => {
+		if (content.startsWith('---')) {
+			return content.replace('---', `---\nht-id: ${id}`);
+		}
 
-	return (cache?.frontmatter?.['ht-id'] as string | undefined) ?? null;
+		return `---\nht-id: ${id}\n---\n\n${content}`;
+	});
 }

@@ -2,10 +2,9 @@ import { WEEK_DAYS } from '../data';
 import { addDays, dateKey, isDone, streak, weekRate } from '../helpers';
 import { Habit } from '../types';
 import { Ring } from './Ring';
-import { Check, X, Plus, Flame, Zap, Crown, Trophy } from 'lucide-react';
+import { Check, X, Plus, Flame } from 'lucide-react';
 import { EditHabitModal } from './EditHabitModal';
 
-import streakFireUrl from '../assets/streak-fire.svg';
 import { ChangeEvent, useState } from 'react';
 import { useHabit } from '../context/habitTrackerContext';
 

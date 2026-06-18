@@ -45,7 +45,7 @@ export interface Reading {
 }
 
 export interface Note {
-	id: string;
+	path: string;
 	label: string;
 }
 

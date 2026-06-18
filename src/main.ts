@@ -1,28 +1,36 @@
-import { Plugin, TFile, WorkspaceLeaf } from 'obsidian';
+import { Plugin, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
+import { ActionDispatch } from 'react';
 
 import { HabitTrackerSettingTab } from './settings';
 import {
 	HABIT_TRACKER_VIEW_TYPE,
 	HabitTrackerView,
 } from './views/HabitTrackerView';
-import { PluginData } from './types';
+import { Note, PluginData } from './types';
 import { defaultPluginData } from './data';
 import { HabitTrackerAction } from './reducer';
-import { ActionDispatch } from 'react';
-import { getNoteId } from './helpers';
-import { LucideImageMinus } from 'lucide-react';
-
-const TRACKED_FOLDER = 'HabitTracker/Notes';
+import { HT_NOTES_PATH } from './constants';
 
 export default class HabitTracker extends Plugin {
 	data: PluginData = defaultPluginData;
 	dispatch: ActionDispatch<[action: HabitTrackerAction]> | null = null;
+	noteIdMap = new Map<string, string>();
 
 	async onload() {
 		const saved = (await this.loadData()) as PluginData;
 
 		if (saved) {
 			this.data = saved;
+		}
+
+		const folder = this.app.vault.getAbstractFileByPath(HT_NOTES_PATH);
+
+		if (folder instanceof TFolder) {
+			for (const file of folder.children) {
+				if (file instanceof TFile) {
+					this.noteIdMap.set(file.path, file.basename);
+				}
+			}
 		}
 
 		this.registerView(
@@ -41,10 +49,20 @@ export default class HabitTracker extends Plugin {
 		this.addSettingTab(new HabitTrackerSettingTab(this.app, this));
 
 		this.registerEvent(
-			this.app.vault.on('delete', (file) => {
-				if (file instanceof TFile) {
-					this.handleFileDeleted(file);
-				}
+			this.app.vault.on('create', async () => {
+				await this.syncNotesFromFolder();
+			}),
+		);
+
+		this.registerEvent(
+			this.app.vault.on('rename', async () => {
+				await this.syncNotesFromFolder();
+			}),
+		);
+
+		this.registerEvent(
+			this.app.vault.on('delete', async () => {
+				await this.syncNotesFromFolder();
 			}),
 		);
 	}
@@ -78,18 +96,19 @@ export default class HabitTracker extends Plugin {
 		await this.saveData(this.data);
 	}
 
-	handleFileDeleted(file: TFile) {
-		if (!file.path.startsWith(TRACKED_FOLDER)) return;
+	async syncNotesFromFolder() {
+		const folder = this.app.vault.getAbstractFileByPath(HT_NOTES_PATH);
+		if (!(folder instanceof TFolder)) return;
 
-		const id = getNoteId(this.app, file);
+		const notes: Note[] = [];
 
-		console.log(id);
+		for (const child of folder.children) {
+			if (!(child instanceof TFile)) continue;
 
-		if (id && this.dispatch) {
-			this.dispatch({
-				type: 'REMOVE_NOTE',
-				payload: { id: id },
-			});
+			this.noteIdMap.set(child.path, child.basename);
+			notes.push({ path: child.path, label: child.basename });
 		}
+
+		this.dispatch?.({ type: 'LOAD_NOTES', payload: notes });
 	}
 }

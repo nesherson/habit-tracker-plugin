@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from 'react';
-import { HabitTrackerState } from '../types';
+import { HabitTrackerState, Note } from '../types';
 import { Toolbar } from './Toolbar';
 import { Tracker } from './Tracker';
 import { habitTrackerReducer } from '../reducer';
@@ -33,9 +33,21 @@ export function App({ initialState, plugin }: AppProps) {
 	}, [state, isLoaded]);
 
 	useEffect(() => {
-		const saved = plugin.data?.state;
+		let saved = plugin.data?.state;
 
 		plugin.dispatch = dispatch;
+
+		if (plugin.noteIdMap.size > 0) {
+			const notes: Note[] = Array.from(
+				plugin.noteIdMap,
+				([key, value]) => ({ path: key, label: value }),
+			);
+
+			saved = {
+				...saved,
+				notes: notes,
+			};
+		}
 
 		dispatch({ type: 'LOAD_STATE', payload: saved });
 		setIsLoaded(true);

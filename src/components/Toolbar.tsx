@@ -5,7 +5,6 @@ import { addDays, getStartOfWeek } from '../helpers';
 import { seedData, WEEK_DAYS } from '../data';
 import { Habit } from '../types';
 import { useHabit } from '../context/habitTrackerContext';
-import { initialState } from '../reducer';
 
 interface ToolbarProps {
 	startOfWeek: Date;

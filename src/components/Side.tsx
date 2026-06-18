@@ -5,7 +5,6 @@ import {
 	Focus,
 	ListTodo,
 	LucideIcon,
-	Pencil,
 	Plus,
 	SquareArrowOutDownLeft,
 	X,
@@ -15,7 +14,7 @@ import { uid } from '../helpers';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { useHabit } from '../context/habitTrackerContext';
 import { HT_NOTES_PATH } from '../constants';
-import { TFile } from 'obsidian';
+import { Notice, TFile } from 'obsidian';
 
 interface SideProps {
 	focuses: KeyFocus[];
@@ -117,17 +116,14 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 	};
 
 	const handleEditTextBlur = (
-		actionType:
-			| 'UPDATE_FOCUS'
-			| 'UPDATE_TODO'
-			| 'UPDATE_READING'
-			| 'UPDATE_NOTE',
+		actionType: 'UPDATE_FOCUS' | 'UPDATE_TODO' | 'UPDATE_READING',
 		id: string,
 	) => {
 		const text = editText;
 
 		setEditItemId(null);
 		setEditText('');
+
 		dispatch({
 			type: actionType,
 			payload: {
@@ -137,39 +133,67 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 		});
 	};
 
-	const handleAddNote = async () => {
-		const noteId = uid();
-		const noteLabel = 'Untitled note';
-		dispatch({
-			type: 'ADD_NOTE',
-			payload: {
-				id: noteId,
-				label: noteLabel,
-			},
-		});
+	const handleNoteEditTextBlur = async (path: string) => {
+		const text = editText;
+		const file = app.vault.getAbstractFileByPath(path);
 
-		const path = `${HT_NOTES_PATH}/${noteLabel}.md`;
-		const content = `---\nht-id: ${noteId}\n---\n\n#`;
+		try {
+			if (file)
+				await app.vault.rename(file, `${file.parent?.path}/${text}.md`);
 
-		await app.vault.create(path, content);
+			setEditItemId(null);
+			setEditText('');
+		} catch (err) {
+			if (err instanceof Error) {
+				new Notice(
+					'A note with that name already exists. Try a different name.',
+				);
+			}
+		}
 	};
 
-	const handleDeleteNote = (noteId: string) => {
-		dispatch({
-			type: 'REMOVE_NOTE',
-			payload: {
-				id: noteId,
-			},
-		});
+	const handleNoteClick = (item: { path: string; label: string }) => {
+		setEditItemId(item.path);
+		setEditText(item.label);
+	};
+
+	const handleAddNote = async () => {
+		const noteLabel = 'Untitled note';
+		const path = `${HT_NOTES_PATH}/${noteLabel}.md`;
+
+		try {
+			await app.vault.create(path, '');
+		} catch (err) {
+			if (err instanceof Error) {
+				new Notice(
+					'A note with that name already exists. Try a different name.',
+				);
+			}
+		}
+	};
+
+	const handleDeleteNote = async (note: Note) => {
+		const file = app.vault.getAbstractFileByPath(note.path);
+
+		if (!file) return;
+
+		try {
+			await app.vault.delete(file);
+		} catch (err) {
+			if (err instanceof Error) {
+				new Notice(
+					'Could not delete note. The file may have been moved or deleted.',
+				);
+			}
+		}
 	};
 
 	const handleOpenNote = async (note: Note) => {
-		// const path = `HabitTracker/Notes/${note.label}.md`;
-		// const content = `---\nht-id: ${note.id}\n---\n\n# ${note.label}\n`;
-		// await app.vault.create(path, content);
 		const file = app.vault.getAbstractFileByPath(
 			`${HT_NOTES_PATH}/${note.label}.md`,
-		) as TFile;
+		);
+
+		if (!(file instanceof TFile)) return;
 
 		await app.workspace.getLeaf(false).openFile(file);
 	};
@@ -267,13 +291,13 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 			/>
 			<Notes
 				notes={notes}
-				onClick={handleItemClick}
+				onClick={handleNoteClick}
 				onAdd={handleAddNote}
 				onDelete={handleDeleteNote}
 				editItemId={editItemId}
 				editText={editText}
 				onEditTextChange={handleEditTextChange}
-				onEditTextBlur={(id) => handleEditTextBlur('UPDATE_NOTE', id)}
+				onEditTextBlur={handleNoteEditTextBlur}
 				onOpenNote={handleOpenNote}
 			/>
 		</div>
@@ -370,13 +394,13 @@ function SidePanelList({
 interface NotesProps {
 	notes: Note[];
 	onClick: (note: Note) => void;
-	onAdd: () => void;
-	onDelete: (noteId: string) => void;
+	onAdd: () => Promise<void>;
+	onDelete: (note: Note) => Promise<void>;
 	editItemId: string | null;
 	editText: string;
 	onEditTextChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	onEditTextBlur: (id: string) => void;
-	onOpenNote: (note: Note) => void;
+	onEditTextBlur: (path: string) => Promise<void>;
+	onOpenNote: (note: Note) => Promise<void>;
 }
 
 function Notes({
@@ -398,26 +422,26 @@ function Notes({
 				{notes.length > 0 && (
 					<span className="ht-sh-count">{notes.length}</span>
 				)}
-				<button className="ht-sh-add" onClick={onAdd}>
+				<button className="ht-sh-add" onClick={() => void onAdd()}>
 					<Plus size={8} />
 				</button>
 			</div>
 			<div className="ht-noteslist">
 				{notes.map((note) => {
 					return (
-						<div key={note.id} className="ht-noterow">
+						<div key={note.path} className="ht-noterow">
 							<div className="ht-noterow-left">
 								<span className="ht-note-icon">
 									<FileText size={8} />
 								</span>
 								<div className="ht-note-1">
-									{editItemId === note.id ? (
+									{editItemId === note.path ? (
 										<input
 											className="ht-edit-text-input"
 											value={editText}
 											onChange={onEditTextChange}
 											onBlur={() =>
-												onEditTextBlur(note.id)
+												void onEditTextBlur(note.path)
 											}
 										/>
 									) : (
@@ -433,13 +457,13 @@ function Notes({
 							<div className="ht-option-buttons">
 								<button
 									className="ht-rowdel ht-rowdel-sm"
-									onClick={() => onOpenNote(note)}
+									onClick={() => void onOpenNote(note)}
 								>
 									<SquareArrowOutDownLeft size={8} />
 								</button>
 								<button
 									className="ht-rowdel ht-rowdel-sm"
-									onClick={() => onDelete(note.id)}
+									onClick={() => void onDelete(note)}
 								>
 									<X size={8} />
 								</button>

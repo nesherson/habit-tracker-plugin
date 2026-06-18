@@ -47,12 +47,8 @@ export type HabitTrackerAction =
 	| { type: 'REMOVE_READING'; payload: { id: string } }
 	// Notes
 	| { type: 'ADD_NOTE'; payload: Note }
-	| {
-			type: 'UPDATE_NOTE';
-			payload: { id: string } & Partial<Omit<Note, 'id'>>;
-	  }
-	| { type: 'REMOVE_NOTE'; payload: { id: string } }
-	| { type: 'LOAD_STATE'; payload: HabitTrackerState };
+	| { type: 'LOAD_STATE'; payload: HabitTrackerState }
+	| { type: 'LOAD_NOTES'; payload: Note[] };
 
 // ─── Initial State ───────────────────────────────────────────────────────────
 
@@ -221,19 +217,14 @@ export function habitTrackerReducer(
 		case 'ADD_NOTE':
 			return { ...state, notes: [...state.notes, action.payload] };
 
-		case 'UPDATE_NOTE': {
-			const { id, ...changes } = action.payload;
-			return { ...state, notes: updateById(state.notes, id, changes) };
-		}
-
-		case 'REMOVE_NOTE':
-			return {
-				...state,
-				notes: removeById(state.notes, action.payload.id),
-			};
-
 		case 'LOAD_STATE':
 			return action.payload;
+
+		case 'LOAD_NOTES':
+			return {
+				...state,
+				notes: action.payload,
+			};
 
 		default:
 			return state;

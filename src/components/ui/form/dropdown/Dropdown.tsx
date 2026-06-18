@@ -40,9 +40,9 @@ export function Dropdown<T = string>({
 				setIsOpen(false);
 			}
 		};
-		document.addEventListener('mousedown', handleClickOutside);
+		activeDocument.addEventListener('mousedown', handleClickOutside);
 		return () =>
-			document.removeEventListener('mousedown', handleClickOutside);
+			activeDocument.removeEventListener('mousedown', handleClickOutside);
 	}, []);
 
 	// Close on Escape
@@ -50,8 +50,9 @@ export function Dropdown<T = string>({
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') setIsOpen(false);
 		};
-		document.addEventListener('keydown', handleKeyDown);
-		return () => document.removeEventListener('keydown', handleKeyDown);
+		activeDocument.addEventListener('keydown', handleKeyDown);
+		return () =>
+			activeDocument.removeEventListener('keydown', handleKeyDown);
 	}, []);
 
 	const handleSelect = (option: DropdownOption<T>) => {
