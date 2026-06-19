@@ -1,30 +1,114 @@
-import { Notice, Plugin } from 'obsidian';
-import { DEFAULT_SETTINGS, Settings, HabitTrackerSettingTab } from './settings';
+import { Plugin, TFile, TFolder, WorkspaceLeaf } from 'obsidian';
+import { ActionDispatch } from 'react';
+
+import { HabitTrackerSettingTab } from './settings';
+import {
+	HABIT_TRACKER_VIEW_TYPE,
+	HabitTrackerView,
+} from './views/HabitTrackerView';
+import { Note, PluginData } from './types/habitTrackerTypes';
+import { defaultPluginData } from './data';
+import { HabitTrackerAction } from './store/reducer';
+import { HT_NOTES_PATH } from './constants';
 
 export default class HabitTracker extends Plugin {
-	settings!: Settings;
+	data: PluginData = defaultPluginData;
+	dispatch: ActionDispatch<[action: HabitTrackerAction]> | null = null;
+	noteIdMap = new Map<string, string>();
 
 	async onload() {
-		await this.loadSettings();
+		const saved = (await this.loadData()) as PluginData;
 
-		this.addRibbonIcon('dice', 'Sample', (_evt: MouseEvent) => {
-			new Notice('This is a notice!');
-		});
+		if (saved) {
+			this.data = saved;
+		}
+
+		const folder = this.app.vault.getAbstractFileByPath(HT_NOTES_PATH);
+
+		if (folder instanceof TFolder) {
+			for (const file of folder.children) {
+				if (file instanceof TFile) {
+					this.noteIdMap.set(file.path, file.basename);
+				}
+			}
+		}
+
+		this.registerView(
+			HABIT_TRACKER_VIEW_TYPE,
+			(leaf) => new HabitTrackerView(leaf, this),
+		);
+
+		this.addRibbonIcon(
+			'notebook',
+			'Habit tracker',
+			async (_evt: MouseEvent) => {
+				await this.activateView();
+			},
+		);
 
 		this.addSettingTab(new HabitTrackerSettingTab(this.app, this));
+
+		this.registerEvent(
+			this.app.vault.on('create', async () => {
+				await this.syncNotesFromFolder();
+			}),
+		);
+
+		this.registerEvent(
+			this.app.vault.on('rename', async () => {
+				await this.syncNotesFromFolder();
+			}),
+		);
+
+		this.registerEvent(
+			this.app.vault.on('delete', async () => {
+				await this.syncNotesFromFolder();
+			}),
+		);
 	}
 
 	onunload() {}
 
-	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			(await this.loadData()) as Partial<Settings>,
-		);
+	async activateView() {
+		const { workspace } = this.app;
+
+		let leaf: WorkspaceLeaf | undefined = undefined;
+		const leaves = workspace.getLeavesOfType(HABIT_TRACKER_VIEW_TYPE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getLeaf(true);
+			await leaf.setViewState({
+				type: HABIT_TRACKER_VIEW_TYPE,
+				active: true,
+			});
+		}
+
+		if (leaf) {
+			await workspace.revealLeaf(leaf);
+		}
 	}
 
-	async saveSettings() {
-		await this.saveData(this.settings);
+	async savePluginData(updates: Partial<PluginData>) {
+		this.data = { ...this.data, ...updates };
+
+		await this.saveData(this.data);
+	}
+
+	async syncNotesFromFolder() {
+		const folder = this.app.vault.getAbstractFileByPath(HT_NOTES_PATH);
+		if (!(folder instanceof TFolder)) return;
+
+		const notes: Note[] = [];
+
+		for (const child of folder.children) {
+			if (!(child instanceof TFile)) continue;
+
+			this.noteIdMap.set(child.path, child.basename);
+			notes.push({ path: child.path, label: child.basename });
+		}
+
+		this.dispatch?.({ type: 'LOAD_NOTES', payload: notes });
 	}
 }

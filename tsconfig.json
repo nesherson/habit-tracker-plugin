@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"jsx": "react-jsx",
 		"inlineSourceMap": true,
 		"inlineSources": true,
 		"module": "ESNext",
@@ -15,6 +16,10 @@
 		"allowSyntheticDefaultImports": true,
 		"lib": ["ES2021", "DOM"],
 		"ignoreDeprecations": "6.0",
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"],
+		},
 	},
 	"include": ["src/**/*.ts"],
 }
