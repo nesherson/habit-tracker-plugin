@@ -1,11 +1,9 @@
 import { BookOpen, Focus, ListTodo, Plus, X } from 'lucide-react';
-import { Notice, TFile } from 'obsidian';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 
 import { KeyFocus, ToDo, Reading, Note } from '../../types';
 import { uid } from '../../helpers';
 import { useHabit } from '../../context/habitTrackerContext';
-import { HT_NOTES_PATH } from '../../constants';
 import { SidePanelList } from './components/SidePanelList';
 import { Notes } from './components/Notes';
 
@@ -126,71 +124,6 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 		});
 	};
 
-	const handleNoteEditTextBlur = async (path: string) => {
-		const text = editText;
-		const file = app.vault.getAbstractFileByPath(path);
-
-		try {
-			if (file)
-				await app.vault.rename(file, `${file.parent?.path}/${text}.md`);
-
-			setEditItemId(null);
-			setEditText('');
-		} catch (err) {
-			if (err instanceof Error) {
-				new Notice(
-					'A note with that name already exists. Try a different name.',
-				);
-			}
-		}
-	};
-
-	const handleNoteClick = (item: { path: string; label: string }) => {
-		setEditItemId(item.path);
-		setEditText(item.label);
-	};
-
-	const handleAddNote = async () => {
-		const noteLabel = 'Untitled note';
-		const path = `${HT_NOTES_PATH}/${noteLabel}.md`;
-
-		try {
-			await app.vault.create(path, '');
-		} catch (err) {
-			if (err instanceof Error) {
-				new Notice(
-					'A note with that name already exists. Try a different name.',
-				);
-			}
-		}
-	};
-
-	const handleDeleteNote = async (note: Note) => {
-		const file = app.vault.getAbstractFileByPath(note.path);
-
-		if (!file) return;
-
-		try {
-			await app.vault.delete(file);
-		} catch (err) {
-			if (err instanceof Error) {
-				new Notice(
-					'Could not delete note. The file may have been moved or deleted.',
-				);
-			}
-		}
-	};
-
-	const handleOpenNote = async (note: Note) => {
-		const file = app.vault.getAbstractFileByPath(
-			`${HT_NOTES_PATH}/${note.label}.md`,
-		);
-
-		if (!(file instanceof TFile)) return;
-
-		await app.workspace.getLeaf(false).openFile(file);
-	};
-
 	return (
 		<div className="ht-side">
 			<div className="ht-sec">
@@ -282,17 +215,7 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 					handleEditTextBlur('UPDATE_READING', id)
 				}
 			/>
-			<Notes
-				notes={notes}
-				onClick={handleNoteClick}
-				onAdd={handleAddNote}
-				onDelete={handleDeleteNote}
-				editItemId={editItemId}
-				editText={editText}
-				onEditTextChange={handleEditTextChange}
-				onEditTextBlur={handleNoteEditTextBlur}
-				onOpenNote={handleOpenNote}
-			/>
+			<Notes notes={notes} />
 		</div>
 	);
 }
