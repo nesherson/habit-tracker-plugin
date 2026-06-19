@@ -1,11 +1,11 @@
-import { WEEK_DAYS } from '../../data';
-import { addDays, dateKey } from '../../helpers';
-import { Habit } from '../../types/habitTrackerTypes';
+import { WEEK_DAYS } from '@/data';
+import { addDays, dateKey } from '@/helpers';
+import { Habit } from '@/types/habitTrackerTypes';
 import { Plus } from 'lucide-react';
-import { EditHabitModal } from '../EditHabitModal/EditHabitModal';
+import { EditHabitModal } from '@/components/editHabitModal/EditHabitModal';
 
 import { useState } from 'react';
-import { useHabitTrackerContext } from '../../context/habitTrackerContext';
+import { useHabitTrackerContext } from '@/context/habitTrackerContext';
 import { HabitRow } from './components';
 
 interface TrackerProps {

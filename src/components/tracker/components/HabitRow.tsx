@@ -1,7 +1,7 @@
 import { Flame, X } from 'lucide-react';
 
-import { Habit } from '../../../types/habitTrackerTypes';
-import { weekRate, streak } from '../../../helpers';
+import { Habit } from '@/types/habitTrackerTypes';
+import { weekRate, streak } from '@/helpers';
 import { Ring } from './Ring';
 import { HabitCell } from './HabitCell';
 

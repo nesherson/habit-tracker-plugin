@@ -1,9 +1,9 @@
 import { BookOpen, Focus, ListTodo, Plus, X } from 'lucide-react';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 
-import { KeyFocus, ToDo, Reading, Note } from '../../types/habitTrackerTypes';
-import { uid } from '../../helpers';
-import { useHabitTrackerContext } from '../../context/habitTrackerContext';
+import { KeyFocus, ToDo, Reading, Note } from '@/types/habitTrackerTypes';
+import { uid } from '@/helpers';
+import { useHabitTrackerContext } from '@/context/habitTrackerContext';
 import { SidePanelList } from './components/SidePanelList';
 import { Notes } from './components/Notes';
 

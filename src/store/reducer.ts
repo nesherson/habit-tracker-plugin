@@ -5,7 +5,7 @@ import {
 	Note,
 	Reading,
 	ToDo,
-} from '../types/habitTrackerTypes';
+} from '@/types/habitTrackerTypes';
 
 // ─── Action Types ────────────────────────────────────────────────────────────
 

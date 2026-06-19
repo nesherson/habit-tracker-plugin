@@ -1,10 +1,10 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
 
-import { addDays, getStartOfWeek } from '../../helpers';
-import { seedData, WEEK_DAYS } from '../../data';
-import { Habit } from '../../types/types';
-import { useHabitTrackerContext } from '../../context/habitTrackerContext';
+import { addDays, getStartOfWeek } from '@/helpers';
+import { seedData, WEEK_DAYS } from '@/data';
+import { Habit } from '@/types/habitTrackerTypes';
+import { useHabitTrackerContext } from '@/context/habitTrackerContext';
 
 interface ToolbarProps {
 	startOfWeek: Date;

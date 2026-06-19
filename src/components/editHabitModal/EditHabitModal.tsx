@@ -1,13 +1,16 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
-import Modal from '../ui/modal/Modal';
-import { Habit, HabitType, HabitUnit } from '../../types/habitTrackerTypes';
-import { uid } from '../../helpers';
-import { seedLog } from '../../data';
-import { useHabitTrackerContext } from '../../context/habitTrackerContext';
-import { ColorPicker } from '../ui/form/colorPicker/ColorPicker';
-import { Input } from '../ui/form/input/Input';
-import { Dropdown, DropdownOption } from '../ui/form/dropdown/Dropdown';
+import Modal from '@/components/ui/modal/Modal';
+import { Habit, HabitType, HabitUnit } from '@/types/habitTrackerTypes';
+import { uid } from '@/helpers';
+import { seedLog } from '@/data';
+import { useHabitTrackerContext } from '@/context/habitTrackerContext';
+import { ColorPicker } from '@/components/ui/form/colorPicker/ColorPicker';
+import { Input } from '@/components/ui/form/input/Input';
+import {
+	Dropdown,
+	DropdownOption,
+} from '@/components/ui/form/dropdown/Dropdown';
 
 interface FormState {
 	name: string;

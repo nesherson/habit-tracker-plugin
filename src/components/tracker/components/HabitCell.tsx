@@ -1,9 +1,9 @@
 import { ChangeEvent, useState } from 'react';
 import { Check, X } from 'lucide-react';
 
-import { Habit } from '../../../types/habitTrackerTypes';
-import { useHabitTrackerContext } from '../../../context/habitTrackerContext';
-import { dateKey, isDone } from '../../../helpers';
+import { Habit } from '@/types/habitTrackerTypes';
+import { useHabitTrackerContext } from '@/context/habitTrackerContext';
+import { dateKey, isDone } from '@/helpers';
 
 interface HabitCellProps {
 	habit: Habit;

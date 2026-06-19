@@ -1,4 +1,4 @@
-import { PALETTE } from '../../../../palette';
+import { PALETTE } from '@/palette';
 
 interface ColorPickerProps {
 	value: string;

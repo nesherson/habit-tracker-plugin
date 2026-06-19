@@ -1,8 +1,8 @@
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 import { StrictMode } from 'react';
 import { Root, createRoot } from 'react-dom/client';
-import { App } from '../components/App';
-import HabitTracker from '../main';
+import { App } from '@/components/App';
+import HabitTracker from '@/main';
 
 export const HABIT_TRACKER_VIEW_TYPE = 'habit-tracker-view';
 

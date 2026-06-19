@@ -2,11 +2,11 @@ import { FileText, Plus, SquareArrowOutDownLeft, X } from 'lucide-react';
 
 import { ChangeEvent, useState } from 'react';
 
-import { Note } from '../../../types/habitTrackerTypes';
-import Modal from '../../ui/modal/Modal';
+import { Note } from '@/types/habitTrackerTypes';
+import Modal from '@/components/ui/modal/Modal';
 import { Notice, TFile } from 'obsidian';
-import { useHabitTrackerContext } from '../../../context/habitTrackerContext';
-import { HT_NOTES_PATH } from '../../../constants';
+import { useHabitTrackerContext } from '@/context/habitTrackerContext';
+import { HT_NOTES_PATH } from '@/constants';
 
 interface NotesProps {
 	notes: Note[];

@@ -1,12 +1,12 @@
 import { useEffect, useReducer, useState } from 'react';
-import { HabitTrackerState, Note } from '../types/habitTrackerTypes';
+import { HabitTrackerState, Note } from '@/types/habitTrackerTypes';
 import { Toolbar } from './toolbar/Toolbar';
 import { Tracker } from './tracker/Tracker';
-import { habitTrackerReducer } from '../store/reducer';
+import { habitTrackerReducer } from '@/store/reducer';
 import { Side } from './Side/Side';
-import { getStartOfWeek } from '../helpers';
-import { HabitTrackerContext } from '../context/habitTrackerContext';
-import HabitTracker from '../main';
+import { getStartOfWeek } from '@/helpers';
+import { HabitTrackerContext } from '@/context/habitTrackerContext';
+import HabitTracker from '@/main';
 
 interface AppProps {
 	initialState: HabitTrackerState;
