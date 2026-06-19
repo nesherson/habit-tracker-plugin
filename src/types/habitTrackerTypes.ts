@@ -28,8 +28,6 @@ export interface Habit {
 export interface KeyFocus {
 	id: string;
 	label: string;
-	done: number;
-	total: number;
 }
 
 export interface ToDo {

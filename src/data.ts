@@ -107,18 +107,14 @@ export function seedData(): HabitTrackerState {
 			},
 		],
 		focuses: [
-			{ id: uid(), label: 'Ship planner plugin v0.2', done: 3, total: 5 },
+			{ id: uid(), label: 'Ship planner plugin v0.2' },
 			{
 				id: uid(),
 				label: 'Re-establish morning routine',
-				done: 4,
-				total: 7,
 			},
 			{
 				id: uid(),
 				label: 'Close out onboarding project',
-				done: 2,
-				total: 4,
 			},
 		],
 		todos: [

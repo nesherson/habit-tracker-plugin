@@ -26,23 +26,6 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 			payload: {
 				id: uid(),
 				label: 'New focus',
-				done: 0,
-				total: 2,
-			},
-		});
-	};
-
-	const handleAdvanceFocus = (
-		e: MouseEvent<HTMLSpanElement>,
-		focus: KeyFocus,
-	) => {
-		e.stopPropagation();
-
-		dispatch({
-			type: 'UPDATE_FOCUS',
-			payload: {
-				id: focus.id,
-				done: (focus.done + 1) % (focus.total + 1),
 			},
 		});
 	};
@@ -165,13 +148,6 @@ export function Side({ focuses, todos, readings, notes }: SideProps) {
 										</span>
 									)}
 								</div>
-								<span
-									className="ht-focus-p"
-									aria-label="Click to advance"
-									onClick={(e) => handleAdvanceFocus(e, f)}
-								>
-									{`${f.done}/${f.total}`}
-								</span>
 								<button
 									className="ht-rowdel ht-rowdel-sm"
 									onClick={(e) => handleDeleteFocus(e, f)}
