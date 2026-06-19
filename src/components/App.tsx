@@ -3,7 +3,7 @@ import { HabitTrackerState, Note } from '../types';
 import { Toolbar } from './Toolbar';
 import { Tracker } from './Tracker';
 import { habitTrackerReducer } from '../reducer';
-import { Side } from './Side';
+import { Side } from './Side/Side';
 import { getStartOfWeek } from '../helpers';
 import { HabitTrackerContext } from '../context/habitTrackerContext';
 import HabitTracker from '../main';
