@@ -1,7 +1,14 @@
 import { uid } from './helpers';
-import { initialState } from './reducer';
-import { DEFAULT_SETTINGS } from './settings';
-import { HabitTrackerState, PluginData } from './types';
+import { initialState } from './store/reducer';
+import {
+	HabitTrackerSettings,
+	HabitTrackerState,
+	PluginData,
+} from './types/habitTrackerTypes';
+
+export const DEFAULT_SETTINGS: HabitTrackerSettings = {
+	mySetting: 'default',
+};
 
 export const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -122,10 +129,6 @@ export function seedData(): HabitTrackerState {
 		readings: [
 			{ id: uid(), label: 'Outsourcing thinking', done: false },
 			{ id: uid(), label: 'Designing data-heavy UIs', done: false },
-		],
-		notes: [
-			{ id: uid(), label: 'Weekly Review' },
-			{ id: uid(), label: 'Ideas / Inbox' },
 		],
 	};
 }

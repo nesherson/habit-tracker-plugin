@@ -2,10 +2,10 @@ import { FileText, Plus, SquareArrowOutDownLeft, X } from 'lucide-react';
 
 import { ChangeEvent, useState } from 'react';
 
-import { Note } from '../../../types';
+import { Note } from '../../../types/habitTrackerTypes';
 import Modal from '../../ui/modal/Modal';
 import { Notice, TFile } from 'obsidian';
-import { useHabit } from '../../../context/habitTrackerContext';
+import { useHabitTrackerContext } from '../../../context/habitTrackerContext';
 import { HT_NOTES_PATH } from '../../../constants';
 
 interface NotesProps {
@@ -13,7 +13,7 @@ interface NotesProps {
 }
 
 export function Notes({ notes }: NotesProps) {
-	const { app } = useHabit();
+	const { app } = useHabitTrackerContext();
 
 	const [isConfirmDeleteNoteModalOpen, setIsConfirmDeleteNoteModalOpen] =
 		useState(false);

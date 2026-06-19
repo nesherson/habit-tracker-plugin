@@ -6,9 +6,9 @@ import {
 	HABIT_TRACKER_VIEW_TYPE,
 	HabitTrackerView,
 } from './views/HabitTrackerView';
-import { Note, PluginData } from './types';
+import { Note, PluginData } from './types/habitTrackerTypes';
 import { defaultPluginData } from './data';
-import { HabitTrackerAction } from './reducer';
+import { HabitTrackerAction } from './store/reducer';
 import { HT_NOTES_PATH } from './constants';
 
 export default class HabitTracker extends Plugin {

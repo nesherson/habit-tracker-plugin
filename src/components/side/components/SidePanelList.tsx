@@ -1,7 +1,7 @@
 import { Check, LucideIcon, Plus, X } from 'lucide-react';
 import { MouseEvent, ChangeEvent } from 'react';
 
-import { ToDo, Reading } from '../../../types';
+import { ToDo, Reading } from '../../../types/habitTrackerTypes';
 
 interface SidePanelListProps {
 	title: string;

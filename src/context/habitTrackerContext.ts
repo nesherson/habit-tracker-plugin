@@ -1,6 +1,6 @@
 import { createContext, useContext, Dispatch } from 'react';
-import { HabitTrackerState } from '../types';
-import { HabitTrackerAction } from '../reducer';
+import { HabitTrackerState } from '../types/habitTrackerTypes';
+import { HabitTrackerAction } from '../store/reducer';
 import { App } from 'obsidian';
 
 interface HabitContextType {
@@ -11,10 +11,13 @@ interface HabitContextType {
 
 export const HabitTrackerContext = createContext<HabitContextType | null>(null);
 
-export function useHabit() {
+export function useHabitTrackerContext() {
 	const ctx = useContext(HabitTrackerContext);
 
-	if (!ctx) throw new Error('useHabit must be used inside HabitProvider');
+	if (!ctx)
+		throw new Error(
+			'useHabitTrackerContext must be used inside HabitProvider',
+		);
 
 	return ctx;
 }

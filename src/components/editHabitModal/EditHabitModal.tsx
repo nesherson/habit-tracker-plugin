@@ -1,13 +1,13 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
-import Modal from './ui/modal/Modal';
-import { Habit, HabitType, HabitUnit } from '../types';
-import { uid } from '../helpers';
-import { seedLog } from '../data';
-import { useHabit } from '../context/habitTrackerContext';
-import { ColorPicker } from './ui/form/colorPicker/ColorPicker';
-import { Input } from './ui/form/input/Input';
-import { Dropdown, DropdownOption } from './ui/form/dropdown/Dropdown';
+import Modal from '../ui/modal/Modal';
+import { Habit, HabitType, HabitUnit } from '../../types/habitTrackerTypes';
+import { uid } from '../../helpers';
+import { seedLog } from '../../data';
+import { useHabitTrackerContext } from '../../context/habitTrackerContext';
+import { ColorPicker } from '../ui/form/colorPicker/ColorPicker';
+import { Input } from '../ui/form/input/Input';
+import { Dropdown, DropdownOption } from '../ui/form/dropdown/Dropdown';
 
 interface FormState {
 	name: string;
@@ -60,7 +60,7 @@ export function EditHabitModal({
 	onClose,
 	habit,
 }: EditHabitModalProps) {
-	const { dispatch } = useHabit();
+	const { dispatch } = useHabitTrackerContext();
 
 	const [form, setForm] = useState(getInitialState(habit));
 	const [error, setError] = useState<string | null>(null);

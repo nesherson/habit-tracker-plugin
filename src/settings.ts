@@ -1,10 +1,5 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import HabitTracker from './main';
-import { HabitTrackerSettings } from './types';
-
-export const DEFAULT_SETTINGS: HabitTrackerSettings = {
-	mySetting: 'default',
-};
 
 export class HabitTrackerSettingTab extends PluginSettingTab {
 	plugin: HabitTracker;

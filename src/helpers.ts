@@ -1,5 +1,5 @@
 import { App, TFile } from 'obsidian';
-import { Habit } from './types';
+import { Habit } from './types/habitTrackerTypes';
 
 export function uid() {
 	return Math.random().toString(36).slice(2, 9);
