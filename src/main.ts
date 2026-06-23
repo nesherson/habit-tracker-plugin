@@ -46,6 +46,12 @@ export default class HabitTracker extends Plugin {
 			},
 		);
 
+		this.addCommand({
+			id: 'open-app',
+			name: 'Open',
+			callback: () => void this.activateView(),
+		});
+
 		this.addSettingTab(new HabitTrackerSettingTab(this.app, this));
 
 		this.registerEvent(
