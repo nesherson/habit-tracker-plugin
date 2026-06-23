@@ -126,5 +126,6 @@ export function seedData(): HabitTrackerState {
 			{ id: uid(), label: 'Outsourcing thinking', done: false },
 			{ id: uid(), label: 'Designing data-heavy UIs', done: false },
 		],
+		notes: [],
 	};
 }
