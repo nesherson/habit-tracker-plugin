@@ -49,8 +49,6 @@ const context = await esbuild.context({
 });
 
 if (prod) {
-	await context.rebuild();
-	process.exit(0);
 	try {
 		const result = await context.rebuild();
 	} catch (err) {
