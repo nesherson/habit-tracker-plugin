@@ -10,18 +10,6 @@ import {
 // ─── Action Types ────────────────────────────────────────────────────────────
 
 export type HabitTrackerAction =
-	// Habits
-	| { type: 'ADD_HABIT'; payload: Habit }
-	| {
-			type: 'UPDATE_HABIT';
-			payload: { id: string } & Partial<Omit<Habit, 'id' | 'log'>>;
-	  }
-	| { type: 'REMOVE_HABIT'; payload: { id: string } }
-	| {
-			type: 'UPDATE_HABIT_LOG';
-			payload: { id: string; key: string; value: number };
-	  }
-	| { type: 'REMOVE_HABIT_LOG_ENTRY'; payload: { id: string; key: string } }
 	// Key Focuses
 	| { type: 'ADD_FOCUS'; payload: KeyFocus }
 	| {

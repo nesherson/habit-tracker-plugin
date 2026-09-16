@@ -63,7 +63,7 @@ export function EditHabitModal({
 	onClose,
 	habit,
 }: EditHabitModalProps) {
-	const { dispatch } = useHabitTrackerContext();
+	const { plugin } = useHabitTrackerContext();
 
 	const [form, setForm] = useState(getInitialState(habit));
 	const [error, setError] = useState<string | null>(null);
@@ -91,20 +91,24 @@ export function EditHabitModal({
 
 		setError(null);
 
-		const newHabit: Habit = {
-			id: habit?.id ?? uid(),
+		const fields = {
 			name: form.name,
 			color: form.color,
 			type: form.type,
 			goal: form.goal,
 			unit: form.unit,
-			log: habit?.log ?? seedLog([0, 0, 0, 0, 0, 0, 0]),
 		};
 
-		dispatch({
-			type: habit === null ? 'ADD_HABIT' : 'UPDATE_HABIT',
-			payload: newHabit,
-		});
+		if (habit) {
+			plugin.habitStore.updateHabit(habit.id, fields);
+		} else {
+			plugin.habitStore.createHabit({
+				id: uid(),
+				...fields,
+				log: seedLog([0, 0, 0, 0, 0, 0, 0]),
+			});
+		}
+
 		setForm(initialState);
 		onClose();
 	};

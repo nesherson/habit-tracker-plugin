@@ -9,10 +9,10 @@ export interface HabitTrackerSettings {
 
 export interface HabitTrackerState {
 	habits: Habit[];
-	focuses: KeyFocus[];
-	todos: ToDo[];
-	readings: Reading[];
-	notes: Note[];
+	// focuses: KeyFocus[];
+	// todos: ToDo[];
+	// readings: Reading[];
+	// notes: Note[];
 }
 
 export interface Habit {

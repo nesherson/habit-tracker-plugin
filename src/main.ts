@@ -10,11 +10,17 @@ import { Note, PluginData } from './types/habitTrackerTypes';
 import { defaultPluginData } from './data';
 import { HabitTrackerAction } from './store/reducer';
 import { HT_NOTES_PATH } from './constants';
+import { HabitStore } from './store/habitStore';
+
+const SAVE_DEBOUNCE_MS = 500;
 
 export default class HabitTracker extends Plugin {
 	data: PluginData = defaultPluginData;
 	dispatch: ActionDispatch<[action: HabitTrackerAction]> | null = null;
 	noteIdMap = new Map<string, string>();
+
+	habitStore = new HabitStore();
+	private saveTimer: number | null = null;
 
 	async onload() {
 		const saved = (await this.loadData()) as PluginData;
@@ -22,6 +28,9 @@ export default class HabitTracker extends Plugin {
 		if (saved) {
 			this.data = saved;
 		}
+
+		this.habitStore.setHabits(this.data.state?.habits ?? []);
+		this.habitStore.subscribe(() => this.scheduleSave());
 
 		const folder = this.app.vault.getAbstractFileByPath(HT_NOTES_PATH);
 
@@ -73,7 +82,31 @@ export default class HabitTracker extends Plugin {
 		);
 	}
 
-	onunload() {}
+	onunload() {
+		if (this.saveTimer !== null) {
+			window.clearTimeout(this.saveTimer);
+			void this.flushSave();
+		}
+	}
+
+	private scheduleSave() {
+		if (this.saveTimer !== null) {
+			window.clearTimeout(this.saveTimer);
+		}
+
+		this.saveTimer = window.setTimeout(
+			() => void this.flushSave(),
+			SAVE_DEBOUNCE_MS,
+		);
+	}
+
+	private async flushSave() {
+		this.saveTimer = null;
+
+		await this.savePluginData({
+			state: { habits: this.habitStore.getSnapshot() },
+		});
+	}
 
 	async activateView() {
 		const { workspace } = this.app;

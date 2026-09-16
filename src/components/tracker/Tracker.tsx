@@ -14,7 +14,7 @@ interface TrackerProps {
 }
 
 export function Tracker({ startOfWeek, habits }: TrackerProps) {
-	const { dispatch } = useHabitTrackerContext();
+	const { plugin } = useHabitTrackerContext();
 
 	const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
 	const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
@@ -37,12 +37,7 @@ export function Tracker({ startOfWeek, habits }: TrackerProps) {
 	};
 
 	const handleDeleteBtnClick = (habit: Habit) => {
-		dispatch({
-			type: 'REMOVE_HABIT',
-			payload: {
-				id: habit.id,
-			},
-		});
+		plugin.habitStore.removeHabit(habit.id);
 	};
 
 	return (
