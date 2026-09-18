@@ -115,6 +115,7 @@
 	flex-direction: column;
 	gap: 16px;
 	height: 100%;
+	min-width: 300px;
 }
 
 /* ---- tracker grid ----------------------------------------------------- */
@@ -339,21 +340,15 @@
 	height: 24px;
 	padding: 0;
 }
-.ht-focus,
-.ht-task,
-.ht-noterow {
+.ht-task {
 	position: relative;
 }
-.ht-focus .ht-rowdel,
-.ht-task .ht-rowdel,
-.ht-noterow .ht-rowdel {
+.ht-task .ht-rowdel {
 	position: static;
 	transform: none;
 }
 .ht-row:hover .ht-rowdel,
-.ht-focus:hover .ht-rowdel,
-.ht-task:hover .ht-rowdel,
-.ht-noterow:hover .ht-rowdel {
+.ht-task:hover .ht-rowdel {
 	opacity: 1;
 }
 .ht-rowdel:hover {
@@ -428,54 +423,7 @@
 	background: var(--background-modifier-hover);
 	color: var(--text-normal);
 }
-/* focuses */
-.ht-focuslist {
-	display: flex;
-	flex-direction: column;
-	gap: 3px;
-}
-.ht-focus {
-	display: flex;
-	align-items: center;
-	gap: 9px;
-	padding: 7px 9px;
-	background: var(--background-primary);
-	border: 1px solid var(--background-modifier-border);
-	border-radius: 8px;
-}
-.ht-focus-dot {
-	flex: 0 0 auto;
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
-	background: var(--interactive-accent);
-}
-.ht-focus-l {
-	flex: 1;
-	min-width: 0;
-	font-size: 12.8px;
-	cursor: text;
-}
-.ht-focus-l .ht-edit-label {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	display: block;
-}
-.ht-focus-p {
-	font-size: 11px;
-	color: var(--text-faint);
-	font-variant-numeric: tabular-nums;
-	cursor: pointer;
-	padding: 1px 4px;
-	border-radius: 4px;
-}
-.ht-focus-p:hover {
-	background: var(--background-modifier-hover);
-	color: var(--text-muted);
-}
-
-/* task lists (to-do, read/watch) */
+/* task list (to-do) */
 .ht-tasklist {
 	display: flex;
 	flex-direction: column;
@@ -528,51 +476,6 @@
 	display: block;
 }
 
-/* notes */
-.ht-noteslist {
-	display: flex;
-	flex-direction: column;
-	gap: 1px;
-}
-.ht-noterow {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 5px 6px;
-	border-radius: 6px;
-}
-.ht-noterow-left {
-	display: flex;
-	gap: 4px;
-	align-items: center;
-}
-.ht-noterow:hover {
-	background: var(--background-modifier-hover);
-}
-.ht-note-icon {
-	display: flex;
-	color: var(--text-faint);
-}
-.ht-note-icon svg {
-	width: 14px;
-	height: 14px;
-}
-.ht-note-l {
-	flex: 1;
-	min-width: 0;
-	font-size: 12.8px;
-	color: var(--text-muted);
-	cursor: pointer;
-}
-.ht-noterow:hover .ht-note-l {
-	color: var(--interactive-accent);
-}
-.ht-note-l .ht-edit-label {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	display: block;
-}
 .display-none {
 	display: none;
 }
@@ -591,11 +494,6 @@
 
 .ht-btn-primary {
 	background-color: "#7c6cdf";
-}
-
-.ht-option-buttons {
-	display: flex;
-	gap: 4px;
 }
 
 /* modal */

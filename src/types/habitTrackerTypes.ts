@@ -9,10 +9,7 @@ export interface HabitTrackerSettings {
 
 export interface HabitTrackerState {
 	habits: Habit[];
-	focuses: KeyFocus[];
 	todos: ToDo[];
-	readings: Reading[];
-	notes: Note[];
 }
 
 export interface Habit {
@@ -25,27 +22,12 @@ export interface Habit {
 	log: Record<string, number>;
 }
 
-export interface KeyFocus {
-	id: string;
-	label: string;
-}
-
 export interface ToDo {
 	id: string;
 	label: string;
 	done: boolean;
 }
 
-export interface Reading {
-	id: string;
-	label: string;
-	done: boolean;
-}
-
-export interface Note {
-	path: string;
-	label: string;
-}
 
 export type HabitType = 'check' | 'num';
 export type HabitUnit = 'pg' | 'mi';

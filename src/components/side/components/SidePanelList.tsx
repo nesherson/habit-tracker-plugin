@@ -1,15 +1,15 @@
 import { Check, LucideIcon, Plus, X } from 'lucide-react';
 import { MouseEvent, ChangeEvent } from 'react';
 
-import { ToDo, Reading } from '@/types/habitTrackerTypes';
+import { ToDo} from '@/types/habitTrackerTypes';
 
 interface SidePanelListProps {
 	title: string;
 	icon: LucideIcon;
-	items: ToDo[] | Reading[];
+	items: ToDo[];
 	editItemId: string | null;
 	editText: string;
-	onItemCheck: (e: MouseEvent<HTMLSpanElement>, item: ToDo | Reading) => void;
+	onItemCheck: (e: MouseEvent<HTMLSpanElement>, item: ToDo) => void;
 	onItemClick: (item: { id: string; label: string }) => void;
 	onAdd: () => void;
 	onDelete: ({ id }: { id: string }) => void;
@@ -58,7 +58,7 @@ export function SidePanelList({
 									{item.done && <Check size={8} />}
 								</span>
 								<div
-									className={`ht-task-1 ${item.done ? 'is-done' : ''}`}
+									className={`ht-task-l ${item.done ? 'is-done' : ''}`}
 								>
 									{editItemId === item.id ? (
 										<input

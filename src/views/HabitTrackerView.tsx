@@ -23,15 +23,11 @@ export class HabitTrackerView extends ItemView {
 		return 'Habit tracker';
 	}
 
-	get data() {
-		return this.plugin.data;
-	}
-
 	protected onOpen(): Promise<void> {
 		this.root = createRoot(this.containerEl);
 		this.root.render(
 			<StrictMode>
-				<App initialState={this.data.state} plugin={this.plugin} />
+				<App plugin={this.plugin} />
 			</StrictMode>,
 		);
 

@@ -1,5 +1,4 @@
 import { uid } from './helpers';
-import { initialState } from './store/reducer';
 import {
 	HabitTrackerSettings,
 	HabitTrackerState,
@@ -11,6 +10,11 @@ export const DEFAULT_SETTINGS: HabitTrackerSettings = {
 };
 
 export const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+export const initialState: HabitTrackerState = {
+	habits: [],
+	todos: [],
+};
 
 export const defaultPluginData: PluginData = {
 	state: initialState,
@@ -106,26 +110,10 @@ export function seedData(): HabitTrackerState {
 				log: C([1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0]),
 			},
 		],
-		focuses: [
-			{ id: uid(), label: 'Ship planner plugin v0.2' },
-			{
-				id: uid(),
-				label: 'Re-establish morning routine',
-			},
-			{
-				id: uid(),
-				label: 'Close out onboarding project',
-			},
-		],
 		todos: [
 			{ id: uid(), label: 'Invest 5h in studying', done: false },
 			{ id: uid(), label: 'Fix sync bug #214', done: false },
 			{ id: uid(), label: 'Schedule eye exam', done: false },
 		],
-		readings: [
-			{ id: uid(), label: 'Outsourcing thinking', done: false },
-			{ id: uid(), label: 'Designing data-heavy UIs', done: false },
-		],
-		notes: [],
 	};
 }

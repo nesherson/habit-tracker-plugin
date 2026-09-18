@@ -1,12 +1,12 @@
-import { createContext, useContext, Dispatch } from 'react';
-import { HabitTrackerState } from '@/types/habitTrackerTypes';
-import { HabitTrackerAction } from '@/store/reducer';
+import { createContext, useContext } from 'react';
 import { App } from 'obsidian';
+import HabitTracker from '@/main';
+import { HabitTrackerStore } from '@/store/habitTrackerStore';
 
 interface HabitContextType {
-	state: HabitTrackerState;
-	dispatch: Dispatch<HabitTrackerAction>;
 	app: App;
+	plugin: HabitTracker;
+	store: HabitTrackerStore;
 }
 
 export const HabitTrackerContext = createContext<HabitContextType | null>(null);
