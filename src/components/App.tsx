@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Toolbar } from './toolbar/Toolbar';
 import { Tracker } from './tracker/Tracker';
+import { Side } from './side/Side';
 import { getStartOfWeek } from '@/helpers';
 import { HabitTrackerContext } from '@/context/habitTrackerContext';
 import HabitTracker from '@/main';
-import { useHabits } from '@/store/useHabits';
+import { useStore } from '@/store/useStore';
 
 interface AppProps {
 	plugin: HabitTracker;
@@ -13,13 +14,16 @@ interface AppProps {
 export function App({ plugin }: AppProps) {
 	const [startOfWeek, setStartOfWeek] = useState(getStartOfWeek(new Date()));
 
+	const habits = useStore(plugin.store.habits);
+
 	const handleStartOfWeekChange = (newDate: Date) => {
 		setStartOfWeek(getStartOfWeek(newDate));
 	};
 
-	const habits = useHabits(plugin.habitStore);
-
-	const ctx = useMemo(() => ({ app: plugin.app, plugin }), [plugin]);
+	const ctx = useMemo(
+		() => ({ app: plugin.app, plugin, store: plugin.store }),
+		[plugin],
+	);
 
 	return (
 		<HabitTrackerContext.Provider value={ctx}>
@@ -31,18 +35,9 @@ export function App({ plugin }: AppProps) {
 				/>
 				<div className="ht-body">
 					<div className="ht-main">
-						<Tracker
-							startOfWeek={startOfWeek}
-							// habits={state.habits}
-							habits={habits}
-						/>
+						<Tracker startOfWeek={startOfWeek} habits={habits} />
 					</div>
-					{/*<Side
-						focuses={state.focuses}
-						todos={state.todos}
-						readings={state.readings}
-						notes={state.notes}
-					/>*/}
+					<Side />
 				</div>
 			</div>
 		</HabitTrackerContext.Provider>

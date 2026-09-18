@@ -13,7 +13,7 @@ interface HabitCellProps {
 }
 
 export function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
-	const { plugin } = useHabitTrackerContext();
+	const { store } = useHabitTrackerContext();
 
 	const [editItemId, setEditItemId] = useState<string | null>(null);
 	const [editNumber, setEditNumber] = useState<number | undefined>(
@@ -36,7 +36,7 @@ export function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
 
 			return;
 		}
-		plugin.habitStore.updateHabitLog(habit.id, date, done ? 0 : 1);
+		store.habits.updateLog(habit.id, date, done ? 0 : 1);
 	};
 
 	const handleEditNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +45,7 @@ export function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
 
 	const handleEditNumberBlur = () => {
 		setEditItemId(null);
-		plugin.habitStore.updateHabitLog(habit.id, date, editNumber ?? 0);
+		store.habits.updateLog(habit.id, date, editNumber ?? 0);
 	};
 
 	return (

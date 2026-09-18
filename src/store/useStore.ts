@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
-import { HabitStore } from './habitStore';
+import { Store } from './store';
 
-export function useHabits(store: HabitStore) {
+export function useStore<T>(store: Store<T>): T {
 	return useSyncExternalStore(store.subscribe, store.getSnapshot);
 }

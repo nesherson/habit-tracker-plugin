@@ -17,7 +17,7 @@ export function Toolbar({
 	habits,
 	startOfWeekOnChange,
 }: ToolbarProps) {
-	const { plugin } = useHabitTrackerContext();
+	const { store } = useHabitTrackerContext();
 	const handleLeftNavBtnClick = () => {
 		startOfWeekOnChange(addDays(startOfWeek, -7));
 	};
@@ -31,7 +31,7 @@ export function Toolbar({
 	};
 
 	const handleAddTestDataClick = () => {
-		plugin.habitStore.setHabits(seedData().habits);
+		store.load(seedData());
 	};
 
 	const getWeekDays = () => {
