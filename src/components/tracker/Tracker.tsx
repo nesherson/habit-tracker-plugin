@@ -1,11 +1,7 @@
 import { WEEK_DAYS } from '@/data';
 import { addDays, dateKey } from '@/helpers';
 import { Habit } from '@/types/habitTrackerTypes';
-import { Plus } from 'lucide-react';
-import { EditHabitModal } from '@/components/editHabitModal/EditHabitModal';
 
-import { useState } from 'react';
-import { useHabitTrackerContext } from '@/context/habitTrackerContext';
 import { HabitRow } from './components';
 
 interface TrackerProps {
@@ -14,11 +10,6 @@ interface TrackerProps {
 }
 
 export function Tracker({ startOfWeek, habits }: TrackerProps) {
-	const { store } = useHabitTrackerContext();
-
-	const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
-	const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
-
 	const getWeekDays = () => {
 		return WEEK_DAYS.map((_, i) => addDays(startOfWeek, i));
 	};
@@ -26,32 +17,11 @@ export function Tracker({ startOfWeek, habits }: TrackerProps) {
 	const days = getWeekDays();
 	const todayKey = dateKey(new Date());
 
-	const handleOpenAddHabitModal = () => {
-		setSelectedHabit(null);
-		setIsAddHabitModalOpen(true);
-	};
-
-	const handleFirstCellDoubleClick = (habit: Habit) => {
-		setSelectedHabit(habit);
-		setIsAddHabitModalOpen(true);
-	};
-
-	const handleDeleteBtnClick = (habit: Habit) => {
-		store.habits.remove(habit.id);
-	};
-
 	return (
 		<div className="htrack">
 			<div className="ht-head">
 				<div className="ht-corner">
 					<span>Habit</span>
-					<button
-						className="ht-addhabit"
-						title="Add new habit"
-						onClick={handleOpenAddHabitModal}
-					>
-						<Plus size={3} />
-					</button>
 				</div>
 
 				{days.map((d) => {
@@ -76,16 +46,9 @@ export function Tracker({ startOfWeek, habits }: TrackerProps) {
 						habit={h}
 						days={days}
 						todayKey={todayKey}
-						onFirstCellDoubleClick={handleFirstCellDoubleClick}
-						onDeleteBtnClick={handleDeleteBtnClick}
 					/>
 				))}
 			</div>
-			<EditHabitModal
-				isOpen={isAddHabitModalOpen}
-				onClose={() => setIsAddHabitModalOpen(false)}
-				habit={selectedHabit}
-			/>
 		</div>
 	);
 }

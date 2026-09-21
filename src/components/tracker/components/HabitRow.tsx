@@ -9,26 +9,15 @@ interface HabitRowProps {
 	habit: Habit;
 	days: Date[];
 	todayKey: string;
-	onFirstCellDoubleClick: (habit: Habit) => void;
-	onDeleteBtnClick: (habit: Habit) => void;
 }
 
-export function HabitRow({
-	habit,
-	days,
-	todayKey,
-	onFirstCellDoubleClick,
-	onDeleteBtnClick,
-}: HabitRowProps) {
+export function HabitRow({ habit, days, todayKey }: HabitRowProps) {
 	const rate = weekRate(habit, days);
 	const st = streak(habit);
 
 	return (
 		<div className="ht-row">
-			<div
-				onDoubleClick={() => onFirstCellDoubleClick(habit)}
-				className="ht-name"
-			>
+			<div className="ht-name">
 				<Ring
 					pct={rate.score / rate.denom}
 					color={habit.color}
@@ -45,12 +34,6 @@ export function HabitRow({
 						</span>
 					)}
 				</span>
-				<button
-					className="ht-rowdel ht-rowdel-sm"
-					onClick={() => onDeleteBtnClick(habit)}
-				>
-					<X size={8} />
-				</button>
 			</div>
 			{days.map((d) => (
 				<HabitCell
