@@ -10,6 +10,7 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = process.argv[2] === "production";
+const pluginDir = process.env.OBSIDIAN_PLUGIN_DIR;
 
 const context = await esbuild.context({
 	alias: {
@@ -18,7 +19,9 @@ const context = await esbuild.context({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ["src/main.ts"],
+	entryPoints: pluginDir
+		? { main: "src/main.ts", styles: "styles.css" }
+		: ["src/main.ts"],
 	bundle: true,
 	external: [
 		"obsidian",
@@ -41,16 +44,16 @@ const context = await esbuild.context({
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	outfile: "main.js",
 	minify: prod,
 	loader: {
 		".svg": "dataurl",
 	},
+	...(pluginDir ? { outdir: pluginDir } : { outfile: "main.js" }),
 });
 
 if (prod) {
 	try {
-		const result = await context.rebuild();
+		await context.rebuild();
 	} catch (err) {
 		console.error("Build failed:", err);
 	} finally {
