@@ -1,10 +1,10 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo } from 'react';
+import { ChevronLeft, ChevronRight, Settings } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 import { addDays, getStartOfWeek } from '@/helpers';
-import { seedData, WEEK_DAYS } from '@/data';
+import { WEEK_DAYS } from '@/data';
 import { Habit } from '@/types/habitTrackerTypes';
-import { useHabitTrackerContext } from '@/context/habitTrackerContext';
+import { ManageHabitsModal } from '../manageHabits/ManageHabitsModal';
 
 interface ToolbarProps {
 	startOfWeek: Date;
@@ -17,7 +17,9 @@ export function Toolbar({
 	habits,
 	startOfWeekOnChange,
 }: ToolbarProps) {
-	const { store } = useHabitTrackerContext();
+	const [isManageHabitsModalOpen, setIsManageHabitsModalOpen] =
+		useState(false);
+
 	const handleLeftNavBtnClick = () => {
 		startOfWeekOnChange(addDays(startOfWeek, -7));
 	};
@@ -28,10 +30,6 @@ export function Toolbar({
 
 	const handleThisWeekClick = () => {
 		startOfWeekOnChange(getStartOfWeek(new Date()));
-	};
-
-	const handleAddTestDataClick = () => {
-		store.load(seedData());
 	};
 
 	const getWeekDays = () => {
@@ -68,11 +66,17 @@ export function Toolbar({
 				</button>
 				<button
 					className="ht-todaybtn"
-					onClick={handleAddTestDataClick}
+					onClick={() => setIsManageHabitsModalOpen(true)}
 				>
-					Test data
+					<Settings size={12} />
 				</button>
 			</div>
+
+			<ManageHabitsModal
+				habits={habits}
+				isOpen={isManageHabitsModalOpen}
+				onClose={() => setIsManageHabitsModalOpen(false)}
+			/>
 		</div>
 	);
 }
