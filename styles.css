@@ -259,7 +259,11 @@
 }
 .ht-cell-num {
 	font-size: 12.5px;
+	/* value and unit share a baseline; wrap + align-content keeps that
+	   single line vertically centered instead of pinned to the top */
 	align-items: baseline;
+	flex-wrap: wrap;
+	align-content: center;
 }
 .ht-numval {
 	font-weight: 500;

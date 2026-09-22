@@ -15,49 +15,54 @@ interface HabitCellProps {
 export function HabitCell({ habit, date, todayKey, color }: HabitCellProps) {
 	const { store } = useHabitTrackerContext();
 
-	const [editItemId, setEditItemId] = useState<string | null>(null);
-	const [editNumber, setEditNumber] = useState<number | undefined>(
-		habit.log[dateKey(date)],
-	);
+	const [isEditing, setIsEditing] = useState(false);
+	const [draft, setDraft] = useState('');
 
 	const key = dateKey(date);
 	const v = habit.log[key];
 	const done = isDone(habit, v);
 
-	const containerClassName = `ht-cell ${key === todayKey ? 'is-today' : ''}`;
+	let containerClassName = `ht-cell ${key === todayKey ? 'is-today' : ''}`;
 
 	if (habit.type === 'num') {
-		containerClassName.concat(' ht-cell-num');
+		containerClassName += ' ht-cell-num';
 	}
 
 	const handleOnClick = () => {
 		if (habit.type === 'num') {
-			setEditItemId(habit.id);
+			if (isEditing) return;
+
+			setDraft(v != null ? String(v) : '');
+			setIsEditing(true);
 
 			return;
 		}
+
 		store.habits.updateLog(habit.id, date, done ? 0 : 1);
 	};
 
-	const handleEditNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setEditNumber(Number(e.target.value));
+	const handleDraftChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setDraft(e.target.value);
 	};
 
-	const handleEditNumberBlur = () => {
-		setEditItemId(null);
-		store.habits.updateLog(habit.id, date, editNumber ?? 0);
+	const handleDraftBlur = () => {
+		setIsEditing(false);
+		store.habits.updateLog(habit.id, date, Number(draft) || 0);
 	};
 
 	return (
 		<div className={containerClassName} onClick={handleOnClick}>
 			{habit.type === 'num' ? (
 				<>
-					{editItemId === habit.id ? (
+					{isEditing ? (
 						<input
+							autoFocus
+							type="number"
+							min={0}
 							className="ht-edit-text-input sm"
-							value={editNumber}
-							onChange={handleEditNumberChange}
-							onBlur={handleEditNumberBlur}
+							value={draft}
+							onChange={handleDraftChange}
+							onBlur={handleDraftBlur}
 						/>
 					) : (
 						<span
